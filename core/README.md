@@ -1,0 +1,1 @@
+# Nucleo do aplicativo, algoritmos e logicas

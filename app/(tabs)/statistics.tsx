@@ -3,10 +3,10 @@ import { ThemedView } from "@/components/ThemedView";
 import React from "react";
 import { SafeAreaView, View, Text, StyleSheet } from "react-native";
 
-const index = () => {
+const statistics = () => {
   return (
     <SafeAreaView style={styles.container}>
-      <ThemedView style={{alignItems:"center"}}>
+      <ThemedView style={{alignItems:"center", paddingVertical: 20}}>
         <ThemedText>ola mundo</ThemedText>
       </ThemedView>
     </SafeAreaView>
@@ -18,4 +18,4 @@ const styles = StyleSheet.create({
     flex: 1,
   }
 })
-export default index;
+export default statistics;

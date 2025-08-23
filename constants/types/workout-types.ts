@@ -14,7 +14,7 @@ export enum ExerciseCategory {
 }
 
 /** Atomic training unit */
-export type Set = Readonly<{
+export type WorkoutSet = Readonly<{
   id: ID;
   exerciseId: ID;
   position: number;     // 0..N-1 within the exercise
@@ -33,7 +33,7 @@ export type Exercise = Readonly<{
   category?: ExerciseCategory;
   restSec?: number;             // planned rest
   plannedSets: number;          // number of work sets planned
-  sets: ReadonlyArray<Set>;
+  sets: ReadonlyArray<WorkoutSet>;
 }>;
 
 /** A workout made of ordered exercises */

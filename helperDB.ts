@@ -8,6 +8,8 @@ export enum ExerciseCategory {
   BARBELL = "BARBELL",
   CABLE = "CABLE",
   BODYWEIGHT = "BODYWEIGHT",
+  CARDIO = "CARDIO",
+  OTHER = "OTHER", // For future-proofing, if you add more categories
 }
 
 /** Full schema (PRAGMAs + tables + indexes) */
@@ -34,7 +36,7 @@ CREATE TABLE IF NOT EXISTS exercises (
     )),
     rest_sec      INTEGER,                         -- planned rest (optional)
   notes         TEXT,
-  position      INTEGER NOT NULL,                -- 0..N-1 within the workout
+  position      INTEGER NOT NULL CHECK (position >= 0),         -- 1..N within the workout
   planned_sets  INTEGER NOT NULL,                -- number of planned work sets
   UNIQUE(workout_id, position)                   -- keep stable ordering
 );
@@ -45,7 +47,7 @@ CREATE INDEX IF NOT EXISTS idx_exercises_workout ON exercises(workout_id);
 CREATE TABLE IF NOT EXISTS sets (
   id            INTEGER PRIMARY KEY AUTOINCREMENT,
   exercise_id   TEXT NOT NULL REFERENCES exercises(id) ON DELETE CASCADE,
-  position      INTEGER NOT NULL,                -- 0..N-1 within the exercise
+  position      INTEGER NOT NULL CHECK (position > 0), -- 0..N within the exercise
   reps          INTEGER CHECK (reps > 0),
   load_kg       REAL    CHECK (load_kg >= 0),
   rpe           REAL,                            -- optional: perceived effort

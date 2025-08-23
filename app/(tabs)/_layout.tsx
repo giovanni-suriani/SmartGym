@@ -1,4 +1,5 @@
 import { Tabs } from "expo-router"
+// import {Tabs} from "react"
 import React from "react"
 import { Platform } from "react-native"
 
@@ -17,7 +18,7 @@ export default function TabLayout() {
   return (
     <SQLiteProvider databaseName="myfirstdb" onInit={initializeDatabase}>
       <Tabs
-        initialRouteName={"createWorkout"}
+        initialRouteName={"playground"}
         screenOptions={{
           tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
           headerShown: false,
@@ -47,11 +48,7 @@ export default function TabLayout() {
             title: "Create Workout",
             tabBarIcon: ({ color }: { color: string }) => (
               // <IconSymbol size={28} name="plus.circle" color={color} />
-              <Ionicons
-                size={28}
-                name="add-circle"
-                color={color}
-              />
+              <Ionicons size={28} name="add-circle" color={color} />
             ),
           }}
         />
@@ -60,12 +57,19 @@ export default function TabLayout() {
           options={{
             title: "Statistics",
             tabBarIcon: ({ color }: { color: string }) => (
-              <Ionicons
-                size={28}
-                name="bar-chart"
-                color={color}
-              />
+              // <Ionicons size={28} name="bar-chart" color={color} />
+              <Ionicons size={28} name="stats-chart" color={color} />
               // <IconSymbol size={28} name="bar-chart" color={color} />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="playground"
+          options={{
+            title: "playground",
+            tabBarIcon: ({ color }: { color: string }) => (
+              // <IconSymbol size={28} name="plus.circle" color={color} />
+              <Ionicons size={28} name="play-circle" color={color} />
             ),
           }}
         />

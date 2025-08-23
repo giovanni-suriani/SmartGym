@@ -15,6 +15,12 @@ export const Colors = {
     icon: '#687076',
     tabIconDefault: '#687076',
     tabIconSelected: tintColorLight,
+    /* Gym Components colors */
+    borderColorFocused: '#dda',
+    borderColorUnfocused: 'rgb(0, 0, 0)',
+    
+    
+    
   },
   dark: {
     text: '#ECEDEE',
@@ -23,5 +29,8 @@ export const Colors = {
     icon: '#9BA1A6',
     tabIconDefault: '#9BA1A6',
     tabIconSelected: tintColorDark,
+    /* Gym Components colors */
+    borderColorFocused: '#bbb',
+    borderColorUnfocused: '#fff',
   },
 };

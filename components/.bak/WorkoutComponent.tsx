@@ -1,13 +1,5 @@
 import React, { useEffect } from "react"
-import {
-  SafeAreaView,
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-  Pressable,
-  Alert,
-} from "react-native"
+import { SafeAreaView, View, Text, StyleSheet, FlatList } from "react-native"
 import { ThemedView } from "@/components/ThemedView"
 import { ThemedText } from "@/components/ThemedText"
 import { Exercise, Workout } from "@/constants/types/workout-types"
@@ -21,8 +13,9 @@ import { Colors } from "@/constants/Colors"
 import { calculateTotalSets } from "@/core/WorkoutMetrics"
 import * as Progress from "react-native-progress"
 import { Animated } from "react-native"
-import { useColorScheme } from "@/hooks/useColorScheme"
-import * as testSettings from "@/settings"
+import * as testSettings from  "@/settings"
+
+
 
 type Props = {
   workout: Workout
@@ -30,7 +23,6 @@ type Props = {
 }
 
 const WorkoutComponent = ({ workout, focused = false }: Props) => {
-  const colorScheme = useColorScheme()
   const { showWorkoutProgressBar } = useWorkoutContext()
   const [progress, setProgress] = useState<number>(0)
   const [workoutSetsDone, setWorkoutSetsDone] = useState<number>(0)
@@ -46,6 +38,7 @@ const WorkoutComponent = ({ workout, focused = false }: Props) => {
 
   const handleDoneDelta = (delta: number) => {
     setWorkoutSetsDone((prev) => {
+      
       const next = prev >= 0 ? prev + delta : prev
       setProgress(next / totalSets)
       console.debug(
@@ -68,11 +61,10 @@ const WorkoutComponent = ({ workout, focused = false }: Props) => {
   }, [progress])
 
   const barColor = colorAnim.interpolate({
-    // inputRange: [0, 0.5, 1],
-    // outputRange: ["rgb(34,197,94)", "rgb(144,238,144)", "rgb(255,215,0)"],
-    inputRange: [0, 1],
+    inputRange: [0, 0.5, 1],
+    outputRange: ["rgb(34,197,94)", "rgb(144,238,144)", "rgb(255,215,0)"],
     // outputRange: ["rgb(43, 255, 0)", "rgb(157, 0, 255)"],
-    outputRange: ["rgb(157, 0, 255)", "rgb(18, 182, 0)"],
+    // outputRange: ["rgb(157, 0, 255)", "rgb(43, 255, 0)" ],
   })
 
   // const t = useRef(new Animated.Value(0)).current
@@ -82,30 +74,20 @@ const WorkoutComponent = ({ workout, focused = false }: Props) => {
   // })
 
   // const paddingBottomFlatList = insets.bottom + tabBarHeight + 20*(totalExercises-1)
-  const paddingBottomFlatList = insets.bottom + tabBarHeight + 10
+  const paddingBottomFlatList = insets.bottom + tabBarHeight + 20
 
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.safeAreaContainer}>
         {/* <ThemedView style={[styles.themedContainer, { marginBottom: paddingBottomFlatList }]}> */}
         <ThemedView style={styles.themedContainer}>
-          <ThemedText
-            type="title"
-            style={[
-              styles.titleText,
-              {
-                borderBottomColor:
-                  Colors[colorScheme ?? "light"].borderColorUnfocused,
-              },
-            ]}
-          >
+          <ThemedText type="title" style={styles.titleText}>
             {workout.name}
           </ThemedText>
           {showWorkoutProgressBar && (
             <Progress.Bar
               progress={progress}
               width={200}
-              height={10}
               color={barColor as any}
               style={{ marginBottom: 15 }}
               animated={true}
@@ -113,8 +95,8 @@ const WorkoutComponent = ({ workout, focused = false }: Props) => {
               animationConfig={{ bounciness: 10 }}
               borderColor={
                 focused
-                  ? Colors[colorScheme ?? "light"].borderColorFocused
-                  : Colors[colorScheme ?? "light"].borderColorUnfocused
+                  ? Colors.dark.borderColorFocused
+                  : Colors.dark.borderColorUnfocused
               }
             />
           )}
@@ -135,26 +117,13 @@ const WorkoutComponent = ({ workout, focused = false }: Props) => {
               styles.flatListContentStyle,
               { paddingBottom: paddingBottomFlatList },
             ]}
-            ListFooterComponent={
-              <Pressable
-                style={styles.finishWorkoutButton}
-                onPress={() => {
-                  // Finish workout logic here
-                  progress == 1
-                    ? console.info("Workout already completed!")
-                    : Alert.alert(
-                        "Not all sets are done",
-                        "Do you want to finish the workout anyway?",
-                        [{ text: "Cancel" }, { text: "Finish anyway" }],
-                        { cancelable: true }
-                      )
-                }}
-              >
-                <ThemedText>Finish Workout</ThemedText>
-              </Pressable>
-            }
+            // style={{alignContent: "center"}}
+            // contentContainerStyle={{ paddingBottom: 20 }}
           />
         </ThemedView>
+        {/* <Pressable>
+          <Text> </Text>
+        </Pressable> */}
       </SafeAreaView>
     </SafeAreaProvider>
   )
@@ -180,7 +149,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 4, // thickness
     borderRadius: 3,
     paddingBottom: 3, // space between text and border
-    // borderBottomColor: Colors[colorScheme ?? "light"].borderColorUnfocused,
+    borderBottomColor: Colors.dark.borderColorUnfocused,
     // marginBottom: 15,
   },
   flatListContentStyle: {
@@ -199,15 +168,6 @@ const styles = StyleSheet.create({
     // justifyContent: "center",
     // paddingBottom: 20,
     // marginBottom: 20,
-  },
-  finishWorkoutButton: {
-    width: "80%",
-    marginTop: 10,
-    padding: 7,
-    backgroundColor: Colors.mutual.inWorkoutFinishWorkoutButtonBackground, // Blue
-    borderRadius: 5,
-    alignSelf: "center",
-    alignItems: "center",
   },
 })
 export default WorkoutComponent

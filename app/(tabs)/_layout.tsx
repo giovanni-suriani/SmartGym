@@ -10,16 +10,24 @@ import { IconSymbol } from "@/components/ui/IconSymbol"
 import TabBarBackground from "@/components/ui/TabBarBackground"
 import { Colors } from "@/constants/Colors"
 import { useColorScheme } from "@/hooks/useColorScheme"
+import { Appearance } from "react-native"
 import { Ionicons } from "@expo/vector-icons"
+import "@/logger"   // <-- Import once here
 
 export default function TabLayout() {
+  Appearance.setColorScheme("dark")
   const colorScheme = useColorScheme()
-
+  console.setLevel("debug") // set default log level
   return (
     <SQLiteProvider databaseName="myfirstdb" onInit={initializeDatabase}>
       <Tabs
-        initialRouteName={"playground"}
+        initialRouteName={"createWorkout"}
         screenOptions={{
+          // Don’t mount a screen until the first time you visit it
+          lazy: true,
+
+          // When you leave a tab, pause its React tree (no re-renders)
+          freezeOnBlur: true,
           tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
           headerShown: false,
           tabBarButton: HapticTab,

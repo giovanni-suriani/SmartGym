@@ -2,18 +2,23 @@ import { ThemedText } from "@/components/ThemedText"
 import { ThemedView } from "@/components/ThemedView"
 import { Exercise, WorkoutSet } from "@/constants/types/workout-types"
 import React, { useMemo } from "react"
-import { StyleSheet, useColorScheme, ScrollView } from "react-native"
+import { StyleSheet, ScrollView } from "react-native"
+import { useColorScheme } from '@/hooks/useColorScheme';
 import { TouchableOpacity, View } from "react-native"
 import { useState } from "react"
 import { Text } from "react-native"
 import { useWorkoutContext } from "@/hooks/WorkoutContext"
 import WorkoutSetComponent from "./WorkoutSetComponent"
 import { Colors } from "@/constants/Colors"
+import * as testSettings from  "@/settings"
 
 type Props = {
   focused?: boolean
   exercise: Exercise
+  onDoneDelta?: (value:number) => void
 }
+
+
 
 /*  
  Without useMemo
@@ -27,7 +32,7 @@ type Props = {
     */
 const ballSize = 48
 
-const ExerciseComponent = ({ focused = false, exercise }: Props) => {
+const ExerciseComponent = ({ focused = false, exercise, onDoneDelta }: Props) => {
   // const weightUnit = useWeightUnit() // Assuming you have a hook to get the weight unit
   const { loadUnit, timeUnit } = useWorkoutContext()
   const colorScheme = useColorScheme()
@@ -37,11 +42,10 @@ const ExerciseComponent = ({ focused = false, exercise }: Props) => {
   const [forceDone, setForceDone] = useState<number>(0)
   // const [checkedSets, setCheckedSets] = useState<boolean[]>(new Array(workoutSets.length).fill(false))
 
-  // const [checkedReported, setCheckedReported] = useState(false)
+  // const [checkedReported, setCheckedReported] = useState<number>(true)
   const [checkedsReported, setCheckedsReported] = useState<boolean[]>(
     new Array(workoutSets.length).fill(false)
   )
-
   const styles = useMemo(() => {
     const borderColor = focused
       ? colorScheme === "dark"
@@ -50,7 +54,7 @@ const ExerciseComponent = ({ focused = false, exercise }: Props) => {
       : colorScheme === "dark"
       ? Colors.dark.borderColorUnfocused
       : Colors.light.borderColorUnfocused
-    console.log(`focused = ${focused}`)
+    // console.log(`focused = ${focused}`)
     return createStyles({ borderColor })
   }, [colorScheme, focused])
 
@@ -61,8 +65,20 @@ const ExerciseComponent = ({ focused = false, exercise }: Props) => {
   const handleCheckChange = (index: number, value: boolean) => {
     const newCheckedsReported = [...checkedsReported]
     newCheckedsReported[index] = value
-    setCheckedsReported(newCheckedsReported)
-    console.log(`Set ${index + 1} checked reported: ${value}`)
+    const delta = value ? 1 : -1
+    if (newCheckedsReported[index] !== checkedsReported[index]) {
+      setCheckedsReported(newCheckedsReported)
+      if (value) {
+        onDoneDelta?.(1)
+      } else {
+        onDoneDelta?.(-1)
+      }
+    }
+    console.debug(`-------------75:ExerciseComponent------------`);
+    console.debug(`Checked reported at index ${index}: ${value}`);
+    console.debug(`checkedsReported: ${newCheckedsReported}`);
+    console.debug(`delta: ${delta}`);
+    console.debug(`--------------------------------------------`);
   }
 
   return (
@@ -85,10 +101,21 @@ const ExerciseComponent = ({ focused = false, exercise }: Props) => {
           style={styles.doneButton}
           onPress={() => {
             setForceDone((prev) => (prev === 0 ? 1 : prev === 1 ? 2 : 1))
-            // 3 states for forceDone on checkboxes
+            let amountTrue = 0
+            checkedsReported.forEach((v) => {
+              if (v) amountTrue++
+            })
+            const setsMade = workoutSets.length - amountTrue
+            onDoneDelta?.(setsMade)
+            setCheckedsReported(new Array(workoutSets.length).fill(true))
+            if (testSettings.TEST_DONE_BUTTON && forceDone === 1) {
+              setCheckedsReported(new Array(workoutSets.length).fill(false))
+              onDoneDelta?.(-workoutSets.length)
+            }
+       
           }}
         >
-          <Text style={{ color: "#fff" }}>Done</Text>
+          <ThemedText>Done</ThemedText>
         </TouchableOpacity>
       </View>
     </ThemedView>
@@ -116,8 +143,8 @@ const createStyles = ({ borderColor }: { borderColor: string }) =>
     },
     doneButton: {
       marginTop: 10,
-      padding: 10,
-      backgroundColor: "#4CAF50", // Green
+      padding: 7,
+      backgroundColor: Colors.mutual.inWorkoutDoneButtonBackground, // Green
       borderRadius: 5,
       alignItems: "center",
     },

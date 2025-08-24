@@ -12,7 +12,8 @@
     "**/*.ts",
     "**/*.tsx",
     "**/*.jsx",
+    "logger.ts",
     ".expo/types/**/*.ts",
     "expo-env.d.ts"
-  ]
+,   ]
 }

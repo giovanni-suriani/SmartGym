@@ -10,9 +10,6 @@ import WorkoutComponent from "@/components/in-workout-gym-stuff/WorkoutComponent
 const ComponentName = () => {
   return (
     <WorkoutComponent workout={DUMMY_WORKOUT} focused={false}/>
-    // <SafeAreaView style={styles.container}>
-      //  {/* <ExerciseComponent exercise={DUMMY_EXERCISE} /> */}
-    //  {/* </SafeAreaView> */}
   )
 }
 

@@ -4,9 +4,18 @@
  */
 
 const tintColorLight = '#0a7ea4';
-const tintColorDark = '#fff';
+// const tintColorDark = '#fff';
+const tintColorDark = 'rgba(10, 126, 164, 0.8)';
 
 export const Colors = {
+  mutual:{
+    inWorkoutDoneButtonBackground:'#4CAF50',
+    inWorkoutFinishWorkoutButtonBackground:'#2196F3',
+    /* So pra testar */
+    borderColorFocused: '#bbb',
+    borderColorUnfocused: '#fff',
+    tint: tintColorLight,
+  },
   light: {
     text: '#11181C',
     // text: "#0c72ad", // Slightly transparent for better readability on light backgrounds
@@ -14,13 +23,12 @@ export const Colors = {
     tint: tintColorLight,
     icon: '#687076',
     tabIconDefault: '#687076',
+    // tabIconDefault: 'rgba(163, 201, 230, 0.5)',
+    // tabIconSelected: 'rgba(10, 126, 164, 0.8)',
     tabIconSelected: tintColorLight,
     /* Gym Components colors */
     borderColorFocused: '#dda',
     borderColorUnfocused: 'rgb(0, 0, 0)',
-    
-    
-    
   },
   dark: {
     text: '#ECEDEE',

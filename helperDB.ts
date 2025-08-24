@@ -31,6 +31,7 @@ CREATE TABLE IF NOT EXISTS exercises (
   id            INTEGER PRIMARY KEY AUTOINCREMENT,
   workout_id    TEXT NOT NULL REFERENCES workouts(id) ON DELETE CASCADE,
   name          TEXT NOT NULL,
+  weight_gap    REAL CHECK (weight_gap >= 0),    -- e.g. 2.5kg plates
   category      TEXT CHECK (category IN (
     'DUMBBELL','SMITH_MACHINE','BARBELL','CABLE','BODYWEIGHT','CARDIO', 'OTHER'
     )),
@@ -58,7 +59,60 @@ CREATE TABLE IF NOT EXISTS sets (
 CREATE INDEX IF NOT EXISTS idx_sets_exercise ON sets(exercise_id);
 `
 
-/** Call this once when your app starts (e.g., in <SQLiteProvider onInit={initializeDatabase} />) */
+// workout #1 will be a set of seeded common exercises
+// workout #2 will be a user-created workout
+
+export async function seedCommonWorkout(db: SQLiteDatabase) {
+  await db.execAsync("BEGIN");
+  try {
+    // 1) Ensure workout #1 exists (fixed id)
+    await db.runAsync(
+      `INSERT INTO workouts (id, name, notes)
+       VALUES (1, 'Dummy_Basics', 'Auto-seeded common exercises')
+       ON CONFLICT(id) DO UPDATE SET
+         name=excluded.name,
+         notes=excluded.notes,
+         updated_at=datetime('now')`
+    );
+
+    // 2) Clear any previous exercises for this workout to keep it deterministic
+    await db.runAsync(`DELETE FROM exercises WHERE workout_id = 1`);
+
+    // 3) Insert 10 common exercises with fixed ids 1..10 and positions 1..10
+    type Row = [id: number, name: string, category: ExerciseCategory, rest: number | null, position: number, plannedSets: number];
+    const rows: Row[] = [
+      [1,  "Barbell Back Squat",     ExerciseCategory.BARBELL,       120, 1,  3],
+      [2,  "Barbell Bench Press",    ExerciseCategory.BARBELL,       120, 2,  3],
+      [3,  "Conventional Deadlift",  ExerciseCategory.BARBELL,       180, 3,  3],
+      [4,  "Overhead Press",         ExerciseCategory.BARBELL,        90, 4,  3],
+      [5,  "Pull-up",                ExerciseCategory.BODYWEIGHT,     90, 5,  3],
+      [6,  "Seated Cable Row",       ExerciseCategory.CABLE,          75, 6,  3],
+      [7,  "Lat Pulldown",           ExerciseCategory.CABLE,          75, 7,  3],
+      [8,  "Dumbbell Bicep Curl",    ExerciseCategory.DUMBBELL,       60, 8,  3],
+      [9,  "Triceps Pushdown",       ExerciseCategory.CABLE,          60, 9,  3],
+      [10, "Smith Machine Squat",    ExerciseCategory.SMITH_MACHINE, 120, 10, 3],
+    ];
+
+    const stmt = await db.prepareAsync(
+      `INSERT INTO exercises
+       (id, workout_id, name, category, rest_sec, position, planned_sets)
+       VALUES (?, 1, ?, ?, ?, ?, ?)`
+    );
+    try {
+      for (const [id, name, category, rest, position, plannedSets] of rows) {
+        await stmt.executeAsync([id, name, category, rest, position, plannedSets]);
+      }
+    } finally {
+      await stmt.finalizeAsync();
+    }
+    await db.execAsync("COMMIT");
+    console.info("Seeded workout #1 with 10 exercises (ids 1..10).");
+  } catch (e) {
+    await db.execAsync("ROLLBACK");
+    console.error("Seeding failed:", e);
+    throw e;
+  }
+}
 
 export async function deleteDatabase(db: SQLiteDatabase) {
   // confirm with user before calling this!
@@ -71,9 +125,23 @@ export async function deleteDatabase(db: SQLiteDatabase) {
   console.info("Dropped old tables.")
 }
 
+export async function getSeededWorkout(db: SQLiteDatabase) {
+  return db.getAllAsync(
+    `SELECT * FROM exercises where workout_id = 1`
+  )
+}
+
 export async function initializeDatabase(db: SQLiteDatabase) {
   await db.execAsync(SCHEMA_SQL)
+  // await deleteDatabase(db) // uncomment to reset DB during development
+  await seedCommonWorkout(db)
   console.info("Database initialized with schema.")
+  const seeded = await getSeededWorkout(db)
+  console.info("Seeded workout #1 :", seeded)
+  if (seeded) {
+  } else {
+    await seedCommonWorkout(db)
+  }
 }
 /** ---- Types for convenience in UI code ---- */
 export type WorkoutRow = {

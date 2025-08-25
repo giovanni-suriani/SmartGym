@@ -1,6 +1,5 @@
 import React, { useEffect } from "react"
 import {
-  SafeAreaView,
   View,
   Text,
   StyleSheet,
@@ -11,7 +10,7 @@ import {
 import { ThemedView } from "@/components/ThemedView"
 import { ThemedText } from "@/components/ThemedText"
 import { Exercise, Workout } from "@/constants/types/workout-types"
-import { SafeAreaProvider } from "react-native-safe-area-context"
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context"
 import { useWorkoutContext } from "@/hooks/WorkoutContext"
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs"
 import ExerciseComponent from "./ExerciseComponent"
@@ -166,10 +165,9 @@ const styles = StyleSheet.create({
   },
   themedContainer: {
     flexGrow: 1,
-    paddingTop: 30,
     alignItems: "center",
     gap: 20,
-    marginBottom: 40,
+    // marginBottom: 40,
     // paddingBottom:200
     // justifyContent: "center",
     // backgroundColor: "rgba(16, 163, 126, 0.1)",

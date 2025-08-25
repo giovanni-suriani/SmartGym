@@ -1,6 +1,7 @@
 // helperDB.ts
 import { type SQLiteDatabase } from "expo-sqlite"
-
+import { Workout, Exercise, WorkoutSet } from '@/constants/types/workout-types';
+// import { Workout, Exercise, WorkoutSet } from '@/c';
 /** Optional enum to mirror the CHECK constraint below */
 export enum ExerciseCategory {
   DUMBBELL = "DUMBBELL",
@@ -31,33 +32,38 @@ CREATE TABLE IF NOT EXISTS exercises (
   id            INTEGER PRIMARY KEY AUTOINCREMENT,
   workout_id    TEXT NOT NULL REFERENCES workouts(id) ON DELETE CASCADE,
   name          TEXT NOT NULL,
-  weight_gap    REAL CHECK (weight_gap >= 0),    -- e.g. 2.5kg plates
+  weight_gap    REAL CHECK (weight_gap >= 0)  DEFAULT 0,  -- e.g. 2.5kg plates
   category      TEXT CHECK (category IN (
     'DUMBBELL','SMITH_MACHINE','BARBELL','CABLE','BODYWEIGHT','CARDIO', 'OTHER'
     )),
-    rest_sec      INTEGER,                         -- planned rest (optional)
-  notes         TEXT,
-  position      INTEGER NOT NULL CHECK (position >= 0),         -- 1..N within the workout
-  planned_sets  INTEGER NOT NULL,                -- number of planned work sets
-  UNIQUE(workout_id, position)                   -- keep stable ordering
-);
-
-CREATE INDEX IF NOT EXISTS idx_exercises_workout ON exercises(workout_id);
-
+  rest_sec      INTEGER CHECK (rest_sec >= 0) DEFAULT 0,      -- planned rest (optional)
+  notes         TEXT DEFAULT '',                              -- optional notes
+  progress_rate REAL CHECK (progress_rate >= 0) DEFAULT 2,    -- e.g. 2.5%/week
+  position      INTEGER NOT NULL CHECK (position >= 0),       -- 1..N within the workout
+  planned_sets  INTEGER NOT NULL,                             -- number of planned work sets
+  load_unit     TEXT CHECK (load_unit IN ('kg','lb')) DEFAULT 'kg',
+  UNIQUE(workout_id, position)                                -- keep stable ordering
+  );
+  
+  CREATE INDEX IF NOT EXISTS idx_exercises_workout ON exercises(workout_id);
+  
 /* 3) Sets (each belongs to an exercise) */
 CREATE TABLE IF NOT EXISTS sets (
-  id            INTEGER PRIMARY KEY AUTOINCREMENT,
-  exercise_id   TEXT NOT NULL REFERENCES exercises(id) ON DELETE CASCADE,
-  position      INTEGER NOT NULL CHECK (position > 0), -- 0..N within the exercise
-  reps          INTEGER CHECK (reps > 0),
-  load_kg       REAL    CHECK (load_kg >= 0),
-  rpe           REAL,                            -- optional: perceived effort
-  is_warmup     INTEGER NOT NULL DEFAULT 0,      -- 0=false, 1=true
+  id                 INTEGER PRIMARY KEY AUTOINCREMENT,
+  exercise_id        TEXT    NOT NULL REFERENCES exercises(id) ON DELETE CASCADE,
+  position           INTEGER NOT NULL CHECK (position > 0),  -- 0..N within the exercise
+  reps               INTEGER NOT NULL CHECK (reps > 0),
+  load_kg            REAL    NOT NULL CHECK (load_kg >= 0),
+  rpe                REAL,                                   -- optional: perceived effort
+  duration_time_secs INTEGER CHECK (duration_time_secs >= 0) DEFAULT 0, -- in seconds, for cardio
+  is_warmup          BOOLEAN NOT NULL DEFAULT 0,             -- 0=false, 1=true
   UNIQUE(exercise_id, position)
 );
 
 CREATE INDEX IF NOT EXISTS idx_sets_exercise ON sets(exercise_id);
 `
+
+// const query = `SELECT * FROM exercisf where workout_id = 1`
 
 // workout #1 will be a set of seeded common exercises
 // workout #2 will be a user-created workout
@@ -131,8 +137,31 @@ export async function getSeededWorkout(db: SQLiteDatabase) {
   )
 }
 
+export async function restartDatabase(db: SQLiteDatabase) {
+  await deleteDatabase(db)
+  try {
+    await db.execAsync(SCHEMA_SQL)
+    console.info("Schema created successfully.")
+  } catch (err) {
+    console.error("Schema error:", err)
+  }
+  try {
+    await seedCommonWorkout(db)
+  } catch (err) {
+    console.error("Seeding error:", err)      
+  }
+}
+
+/* Call this from your app’s root, once, to initialize the DB */
+
 export async function initializeDatabase(db: SQLiteDatabase) {
-  await db.execAsync(SCHEMA_SQL)
+  try {
+    await db.execAsync(SCHEMA_SQL)
+    console.info("Schema created successfully.")
+  } catch (err) {
+    console.error("Schema error:", err)
+  }
+  
   // await deleteDatabase(db) // uncomment to reset DB during development
   await seedCommonWorkout(db)
   console.info("Database initialized with schema.")
@@ -143,83 +172,57 @@ export async function initializeDatabase(db: SQLiteDatabase) {
     await seedCommonWorkout(db)
   }
 }
+
 /** ---- Types for convenience in UI code ---- */
-export type WorkoutRow = {
-  id: number
-  name: string
-  notes?: string | null
-  created_at: string
-  updated_at: string
+// --- DB row types for insertions --- //
+export type RowWorkout = {
+  id?: number;              // AUTOINCREMENT
+  name: string;
+  notes?: string | null;
+  created_at?: string;      // DEFAULT datetime('now')
+  updated_at?: string;      // DEFAULT datetime('now')
 }
 
-export type ExerciseInput = {
-  name: string
-  category: ExerciseCategory
-  rest_sec?: number | null
-  planned_sets: number
+export type RowExercise = {
+  id?: number;              // AUTOINCREMENT
+  workout_id: number;       // FK -> workouts.id
+  name: string;
+  category: string;
+  rest_sec?: number | null;
+  position: number;
+  planned_sets: number;
 }
 
 /** ---- Insert helpers ---- */
 export async function createWorkout(
   db: SQLiteDatabase,
-  name: string,
-  notes?: string
+  row: RowWorkout
 ): Promise<number> {
   const res = await db.runAsync(
-    "INSERT INTO workouts (name, notes) VALUES (?, ?)",
-    [name, notes ?? null]
+    `INSERT INTO workouts (name) VALUES (?)`,
+    [row.name, row.notes ?? null]
   )
-  return res.lastInsertRowId
+  return res.lastInsertRowId!
 }
 
-export async function addExercise(
+export async function createExercise(
   db: SQLiteDatabase,
-  workoutId: number,
-  position: number,
-  input: ExerciseInput
+  row: RowExercise
 ): Promise<number> {
-  const { name, category, rest_sec, planned_sets } = input
   const res = await db.runAsync(
     `INSERT INTO exercises (workout_id, name, category, rest_sec, position, planned_sets)
      VALUES (?, ?, ?, ?, ?, ?)`,
-    [workoutId, name.trim(), category, rest_sec ?? null, position, planned_sets]
+    [
+      row.workout_id,
+      row.name.trim(),
+      row.category,
+      row.rest_sec ?? null,
+      row.position,
+      row.planned_sets,
+    ]
   )
-  return res.lastInsertRowId
+  return res.lastInsertRowId!
 }
-
-/** Quick reads */
-export async function listWorkouts(db: SQLiteDatabase): Promise<WorkoutRow[]> {
-  return db.getAllAsync<WorkoutRow>(`SELECT * FROM workouts ORDER BY created_at DESC`)
-}
-
-// export async function getWorkoutWithExercises(
-//   db: SQLiteDatabase,
-//   workoutId: number
-// ): Promise<{
-//   workout: WorkoutRow | null
-//   exercises: Array<{
-//     id: number
-//     name: string
-//     category: ExerciseCategory | null
-//     rest_sec: number | null
-//     position: number
-//     planned_sets: number
-//   }>
-// }> {
-//   const workout = await db.getFirstAsync<WorkoutRow>(
-//     "SELECT * FROM workouts WHERE id = ?",
-//     [workoutId]
-//   )
-//   const exercises = await db.getAllAsync(
-//     `SELECT id, name, category, rest_sec, position, planned_sets
-//      FROM exercises
-//      WHERE workout_id = ?
-//      ORDER BY position ASC`,
-//     [workoutId]
-//   )
-//   return { workout: workout ?? null, exercises }
-// }
-
 
 
 

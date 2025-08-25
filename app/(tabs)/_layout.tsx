@@ -4,7 +4,7 @@ import React from "react"
 import { Platform } from "react-native"
 
 import { SQLiteProvider } from "expo-sqlite"
-import { initializeDatabase } from "@/helperDB"
+import { initializeDatabase, restartDatabase } from "@/helperDB"
 import { HapticTab } from "@/components/HapticTab"
 import { IconSymbol } from "@/components/ui/IconSymbol"
 import TabBarBackground from "@/components/ui/TabBarBackground"
@@ -19,7 +19,8 @@ export default function TabLayout() {
   const colorScheme = useColorScheme()
   console.setLevel("debug") // set default log level
   return (
-    <SQLiteProvider databaseName="myfirstdb" onInit={initializeDatabase}>
+    // <SQLiteProvider databaseName="myfirstdb" onInit={initializeDatabase}>
+    <SQLiteProvider databaseName="myfirstdb" onInit={restartDatabase}>
       <Tabs
         initialRouteName={"createWorkout"}
         screenOptions={{

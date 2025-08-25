@@ -1,5 +1,6 @@
 import React from "react"
-import { SafeAreaView, View, Text, StyleSheet } from "react-native"
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context"
+import { View, Text, StyleSheet } from "react-native"
 import { ThemedView } from "@/components/ThemedView"
 import { ThemedText } from "@/components/ThemedText"
 import { DUMMY_WORKOUT } from "@/constants/DummyWorkoutValues"
@@ -19,5 +20,6 @@ const styles = StyleSheet.create({
     alignContent: "center",
     justifyContent: "center",
   },
+  
 })
 export default ComponentName

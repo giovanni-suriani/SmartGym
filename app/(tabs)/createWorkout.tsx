@@ -34,9 +34,10 @@ const createWorkout = () => {
           {/* <View style={{ alignSelf: "stretch"}}> */}
             {/* <ExerciseComponent exercise={DUMMY_WORKOUT.exercises[0]} /> */}
           <AddedExerciseComponent exercise={DUMMY_WORKOUT.exercises[0]} />
-          <AddedExerciseComponent exercise={DUMMY_WORKOUT.exercises[4]} />
-          <AddedExerciseComponent exercise={DUMMY_WORKOUT.exercises[2]} />
-          <AddedExerciseComponent exercise={DUMMY_WORKOUT.exercises[3]} />
+          <AddedExerciseComponent exercise={DUMMY_WORKOUT.exercises[1]} />
+          {/* <AddedExerciseComponent exercise={DUMMY_WORKOUT.exercises[4]} /> */}
+          {/* <AddedExerciseComponent exercise={DUMMY_WORKOUT.exercises[2]} /> */}
+          {/* <AddedExerciseComponent exercise={DUMMY_WORKOUT.exercises[3]} /> */}
           {/* </View> */}
         </ThemedView>
       </SafeAreaView>

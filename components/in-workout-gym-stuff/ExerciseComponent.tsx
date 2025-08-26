@@ -46,8 +46,8 @@ const ExerciseComponent = ({
   // const [checkedSets, setCheckedSets] = useState<boolean[]>(new Array(workoutSets.length).fill(false))
 
   // const [checkedReported, setCheckedReported] = useState<number>(true)
-  const [checkedsReported, setCheckedsReported] = useState<boolean[]>(
-    new Array(workoutSets.length).fill(false)
+  const [checkedsReported, setCheckedsReported] = useState<number[]>(
+    new Array(workoutSets.length).fill(0)
   )
   const styles = useMemo(() => {
     const borderColor = focused
@@ -65,18 +65,34 @@ const ExerciseComponent = ({
   //   setCheckedReported(value)
   //   console.log(`Checked reported: ${value}`);
   // }
-  const handleCheckChange = (index: number, value: boolean) => {
+  const handleCheckChange = (index: number, value: number) => {
     const newCheckedsReported = [...checkedsReported]
     newCheckedsReported[index] = value
-    const delta = value ? 1 : -1
-    if (newCheckedsReported[index] !== checkedsReported[index]) {
-      setCheckedsReported(newCheckedsReported)
-      if (value) {
-        onDoneDelta?.(1)
-      } else {
-        onDoneDelta?.(-1)
-      }
+    let delta = 0
+    switch (value) {
+      case 1:
+        delta = 1
+        break
+      case 2:
+        delta = 0
+        break
+      case 0:
+        delta = -1
+        break
+      default:
+        break
     }
+    setCheckedsReported(newCheckedsReported)
+    onDoneDelta?.(delta)
+    // setCheckedReported(value)
+    // if (newCheckedsReported[index] !== checkedsReported[index]) {
+    //   setCheckedsReported(newCheckedsReported)
+    //   if (value) {
+    //     onDoneDelta?.(delta)
+    //   } else {
+    //     onDoneDelta?.(delta)
+    //   }
+    // }
     console.debug(`-------------75:ExerciseComponent------------`)
     console.debug(`Checked reported at index ${index}: ${value}`)
     console.debug(`checkedsReported: ${newCheckedsReported}`)
@@ -94,7 +110,7 @@ const ExerciseComponent = ({
             key={index}
             style={{ marginTop: 7, paddingBottom: 2 }}
             workoutSet={workoutSet}
-            handleCheckChange={(value: boolean) =>
+            handleCheckChange={(value: number) =>
               handleCheckChange(index, value)
             }
             forceDone={forceDone}
@@ -104,17 +120,17 @@ const ExerciseComponent = ({
           style={styles.doneButton}
           onPress={() => {
             setForceDone((prev) => (prev === 0 ? 1 : prev === 1 ? 2 : 1))
-            let amountTrue = 0
-            checkedsReported.forEach((v) => {
-              if (v) amountTrue++
-            })
-            const setsMade = workoutSets.length - amountTrue
-            onDoneDelta?.(setsMade)
-            setCheckedsReported(new Array(workoutSets.length).fill(true))
-            if (testSettings.TEST_DONE_BUTTON && forceDone === 1) {
-              setCheckedsReported(new Array(workoutSets.length).fill(false))
-              onDoneDelta?.(-workoutSets.length)
-            }
+            // let amountTrue = 0
+            // checkedsReported.forEach((v) => {
+            //   if (v) amountTrue++
+            // })
+            // const setsMade = workoutSets.length - amountTrue
+            // onDoneDelta?.(setsMade)
+            // setCheckedsReported(new Array(workoutSets.length).fill(1))
+            // if (testSettings.TEST_DONE_BUTTON && forceDone === 1) {
+            //   setCheckedsReported(new Array(workoutSets.length).fill(0))
+            //   onDoneDelta?.(-workoutSets.length)
+            // }
           }}
         >
           <ThemedText>Done</ThemedText>

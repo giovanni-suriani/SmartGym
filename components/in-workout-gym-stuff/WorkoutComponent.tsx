@@ -28,6 +28,10 @@ type Props = {
   focused?: boolean
 }
 
+type checkedSetsByExercise = {
+  [id: number]: number[]
+}
+
 const WorkoutComponent = ({ workout, focused = false }: Props) => {
   const colorScheme = useColorScheme()
   const { showWorkoutProgressBar } = useWorkoutContext()
@@ -37,24 +41,81 @@ const WorkoutComponent = ({ workout, focused = false }: Props) => {
   const [exercises, setExercises] = useState<ReadonlyArray<Exercise>>(
     workout.exercises
   )
-
+  
+  
   const insets = useSafeAreaInsets()
   const tabBarHeight = useBottomTabBarHeight()
   const totalSets = calculateTotalSets({ workout })
   const totalExercises = workout.exercises.length
+  const [checkedSetsMap, setCheckedSetsMap] = useState<checkedSetsByExercise[]>([])
 
-  const handleDoneDelta = (delta: number) => {
-    setWorkoutSetsDone((prev) => {
-      const next = prev >= 0 ? prev + delta : prev
-      setProgress(next / totalSets)
-      console.debug(
-        `Workout sets done: ${next} / ${totalSets}, progress: ${
-          next / totalSets
-        }`
-      )
-      return next
-    })
+  const handleCheckChange = (checkedSets: number[], exerciseId: number) => {
+    // setCheckedSetsMap((prev) => {
+    //   const newMap = { ...prev, [exerciseId]: checkedSets }
+    //   // console.log(`Updated checkedSetsMap: ${JSON.stringify(newMap)}`)
+    //   return newMap
+    // })
+    // const setsMade = Object.values(checkedSets).reduce(
+    //   (sum, val) => sum + (val === 1 ? 1 : 0),
+    //   0
+    // )
+    // const totalCheckedSets = Object.values(checkedSetsMap).reduce(
+    //   (sum, arr) => sum + arr.filter((val) => val === 1).length,
+    //   0
+    // ) + setsMade // include current exercise's sets
+    // setWorkoutSetsDone(totalCheckedSets)
+    // setProgress(totalSets > 0 ? totalCheckedSets / totalSets : 0)
+    // console.log(`Total sets made: ${totalCheckedSets} / ${totalSets}`)
   }
+
+  const styles = StyleSheet.create({
+    container: {
+      flex: 1,
+    },
+    themedContainer: {
+      flexGrow: 1,
+      alignItems: "center",
+      gap: 20,
+      marginBottom: 40,
+      // paddingBottom:200
+      // justifyContent: "center",
+      // backgroundColor: "rgba(16, 163, 126, 0.1)",
+    },
+    titleText: {
+      marginTop: "10%",
+      borderBottomWidth: 4, // thickness
+      borderRadius: 3,
+      paddingBottom: 3, // space between text and border
+      // textDecorationLine: "underline",
+      // borderBottomColor: Colors[colorScheme ?? "light"].borderColorUnfocused,
+      // marginBottom: 15,
+    },
+    flatListContentStyle: {
+      paddingTop: 25,
+      gap: 20,
+      justifyContent: "center",
+      // flexGrow: 1,
+      // alignItems: "center",
+      // paddingBottom: 100,
+      // paddingBottom: insets.bottom + tabBarHeight + 20,
+      // marginTop: 20,
+      // paddingBottom: insets.bottom + tabBarHeight + 12,
+      // backgroundColor: "rgba(159, 20, 20, 0.1)",
+      // flexGrow: 1,
+      // marginTop: 100
+
+  // const handleDoneDelta = (delta: number) => {
+  //   setWorkoutSetsDone((prev) => {
+  //     const next = prev >= 0 && prev < totalSets ? prev + delta : prev
+  //     setProgress(next / totalSets)
+  //     console.debug(
+  //       `Workout sets done: ${next} / ${totalSets}, progress: ${
+  //         next / totalSets
+  //       }`
+  //     )
+  //     return next
+  //   })
+  // }
 
   const colorAnim = useRef(new Animated.Value(0)).current
 
@@ -128,7 +189,7 @@ const WorkoutComponent = ({ workout, focused = false }: Props) => {
             )}
             keyExtractor={(item) => item.id.toString()}
             // style={{ alignItems:"center"}} // Or "width: '100%'"
-            // style={{ alignSelf: "stretch" }} // Or "width: '100%'"
+            style={{ alignSelf: "stretch" }} // Or "width: '100%'"
             // contentContainerStyle={styles.flatListContentStyle}
             contentContainerStyle={[
               styles.flatListContentStyle,
@@ -137,6 +198,13 @@ const WorkoutComponent = ({ workout, focused = false }: Props) => {
             ListFooterComponent={
               <Pressable
                 style={styles.finishWorkoutButton}
+                // onPress = {
+                //   () => {
+                //     setProgress(0)
+                //     setWorkoutSetsDone(0)
+                //     console.log(`Progress and setsDone set to 0`);
+                //   }
+                // }
                 onPress={() => {
                   // Finish workout logic here
                   progress == 1

@@ -166,7 +166,7 @@ export async function initializeDatabase(db: SQLiteDatabase) {
   await seedCommonWorkout(db)
   console.info("Database initialized with schema.")
   const seeded = await getSeededWorkout(db)
-  console.info("Seeded workout #1 :", seeded)
+  // console.info("Seeded workout #1 :", seeded)
   if (seeded) {
   } else {
     await seedCommonWorkout(db)

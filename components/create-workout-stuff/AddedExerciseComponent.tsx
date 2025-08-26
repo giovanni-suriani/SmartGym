@@ -5,6 +5,7 @@ import { useColorScheme } from "@/hooks/useColorScheme"
 import { Colors } from "@/constants/Colors"
 import { ThemedView } from "@/components/ThemedView"
 import { ThemedText } from "@/components/ThemedText"
+import { useWorkoutContext } from "@/hooks/WorkoutContext"
 import {
   Workout,
   Exercise,
@@ -43,6 +44,7 @@ const iconMap: Record<
 
 const AddedExerciseComponent = ({ exercise, focused = false }: Props) => {
   const colorScheme = useColorScheme()
+  const { loadUnit, timeUnit } = useWorkoutContext()
   const iconReturn = () => {
     if (exercise?.category === ExerciseCategory.DUMBBELL) {
       return (
@@ -78,7 +80,6 @@ const AddedExerciseComponent = ({ exercise, focused = false }: Props) => {
   const leftViewContent = (
     <>
       {exercise.category && iconReturn()}
-
       <ThemedText
         style={{ flexShrink: 1 }}
         type="defaultSemiBold"
@@ -88,17 +89,26 @@ const AddedExerciseComponent = ({ exercise, focused = false }: Props) => {
       </ThemedText>
     </>
   )
-  // variable = variable ?? defalut value // If not provided (null or undefined), use default value
-  // ifnot
+  
+
+  const rightViewText = () => {
+    if (exercise?.category === ExerciseCategory.CARDIO && timeUnit == 'min' ) {
+      return `${exercise.plannedSets} x ${(
+        (exercise.sets[0]?.duration_time_secs ?? 0) / 60
+      ).toFixed(1)} ${timeUnit}`
+    } 
+    if (exercise?.category === ExerciseCategory.CARDIO && timeUnit == 'sec' ) {
+      return `${exercise.plannedSets} x ${(
+        (exercise.sets[0]?.duration_time_secs ?? 0) / 60
+      ).toFixed(1)} ${timeUnit}`
+    } 
+    else {
+      return `${exercise.plannedSets} sets`
+    }
+  }
   const rightViewContent = (
     <ThemedText style={{ flexShrink: 1 }} type="defaultSemiBold">
-      {exercise?.category === ExerciseCategory.CARDIO
-        ? `${
-            exercise.sets[0]?.duration_time_secs != null
-              ? exercise.sets[0].duration_time_secs / 60
-              : "done"
-          } min`
-        : `${exercise.plannedSets} sets`}
+      {rightViewText()}
     </ThemedText>
   )
 

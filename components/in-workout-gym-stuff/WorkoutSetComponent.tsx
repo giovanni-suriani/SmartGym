@@ -7,7 +7,7 @@ import { ThemedView } from "@/components/ThemedView"
 import { useWorkoutContext } from "@/hooks/WorkoutContext"
 import Checkbox from "expo-checkbox"
 import { StyleProp, ViewStyle } from "react-native"
-import * as testSettings from  "@/settings"
+import * as testSettings from "@/settings"
 
 type Props = {
   style?: StyleProp<ViewStyle>
@@ -43,25 +43,33 @@ const WorkoutSetComponent = ({
     setChecked(value)
     handleCheckChange?.(value)
   }
-  // const item: WorkoutSet = DUMMY_SET // Assuming you want to display the first set
-  // const item = {
-  //   workoutSet: workoutSetItem, // Assuming you want to display the first set
-  // }
+
+  const textCardioOrWeight = () => {
+    if (workoutSet.loadKg !== undefined) {
+      // console.log(`thing ncc reloaded`)
+      return `${workoutSet.reps} x ${workoutSet.loadKg} ${loadUnit}`
+    }
+    const workoutSetRepsString = workoutSet.reps > 1 ? `${workoutSet.reps} x ` : ""
+    
+    if (
+      workoutSet.duration_time_secs !== undefined &&
+      (timeUnit === "sec" || workoutSet.duration_time_secs < 60)
+    ) {
+      return `${workoutSetRepsString}${workoutSet.duration_time_secs} ${timeUnit}`
+    }
+    if (workoutSet.duration_time_secs !== undefined && timeUnit === "min") {
+      return `${workoutSetRepsString}${(workoutSet.duration_time_secs / 60).toFixed(1)} ${timeUnit}`
+    }
+    return `Wrong Data Provided`
+  }
 
   return (
     <View style={[styles.container, style]}>
       <View style={[styles.rowText]}>
         <ThemedText type={"default"} style={checked && styles.dashedText}>
-          {workoutSet.position}.{" "}
-        </ThemedText>
-        <ThemedText type={"default"} style={checked && styles.dashedText}>
-          {workoutSet.isWarmup ? "Warmup Set" : "Working Set"}:{" "}
-        </ThemedText>
-        <ThemedText type={"default"} style={checked && styles.dashedText}>
-          {workoutSet.reps} x{" "}
-        </ThemedText>
-        <ThemedText type={"default"} style={checked && styles.dashedText}>
-          {workoutSet.loadKg} {loadUnit}{" "}
+          {`${workoutSet.position}. `}
+          {`${workoutSet.isWarmup ? "Warmup Set" : "Working Set"}: `}
+          {textCardioOrWeight()}
         </ThemedText>
       </View>
       {showWorkoutSetCheckbox && (
@@ -103,8 +111,8 @@ const styles = StyleSheet.create({
   checkbox: {
     width: checkboxSize * 1.2,
     height: checkboxSize,
-    // backgroundColor: "rgba(255, 255, 255, 0.57)", // semi-transparent white
     borderRadius: 10,
+    // backgroundColor: "rgba(255, 255, 255, 0.57)", // semi-transparent white
     // margin: 8,
   },
 })

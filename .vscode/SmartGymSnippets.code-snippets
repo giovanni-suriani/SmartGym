@@ -24,6 +24,15 @@
 		],
 		"description": "Import Workout, Exercise and WorkoutSet types from WorkoutTypos"
 	},
+	"Import useWorkoutContext":{
+		"scope": "javascript,typescript, typescriptreact",
+		"prefix": "useworkoutcontext",
+		"body": [
+			"import { useWorkoutContext } from '@/hooks/WorkoutContext';",
+			"const { loadUnit, timeUnit, showWorkoutSetCheckbox } = useWorkoutContext()"
+		],
+		"description": "Import useWorkoutContext hook from WorkoutContext"
+	},
 	"Import WorkoutMetrics":{
 		"scope": "javascript,typescript, typescriptreact",
 		"prefix": "workoutmetrics",

@@ -44,7 +44,7 @@ export type WorkoutSet = Readonly<{
   exerciseId: number;
   position: number;     // 0..N-1 within the exercise
   reps: number;
-  loadKg: number;
+  loadKg?: number;
   rpe?: number;
   isWarmup: boolean;
   duration_time_secs?: number;    // in seconds, for cardio

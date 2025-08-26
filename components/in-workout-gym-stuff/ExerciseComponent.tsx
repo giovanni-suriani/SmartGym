@@ -126,20 +126,6 @@ const ExerciseComponent = ({
 
 const createStyles = ({ borderColor }: { borderColor: string }) =>
   StyleSheet.create({
-    container: {
-      alignSelf: "stretch",
-      marginHorizontal: "10%",
-      borderRadius: 10,
-      borderWidth: 2,
-      borderColor,
-      paddingHorizontal: "5%",
-      paddingVertical: "5%",
-      // flexDirection: "row",
-      // margin: "10%",
-      // backgroundColor: "rgba(255, 255, 255, 0.57)", // semi-transparent white
-      // borderColor,
-      // borderColor: colorScheme === "dark" ? "#fff" : "#000",
-    },
     setsContainer: {
       gap: 10,
     },

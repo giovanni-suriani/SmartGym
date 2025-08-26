@@ -19,11 +19,11 @@ export default function TabLayout() {
   const colorScheme = useColorScheme()
   console.setLevel("debug") // set default log level
   return (
-    // <SQLiteProvider databaseName="myfirstdb" onInit={initializeDatabase}>
-    <SQLiteProvider databaseName="myfirstdb" onInit={restartDatabase}>
+    // <SQLiteProvider databaseName="myfirstdb" onInit={restartDatabase}>
+    <SQLiteProvider databaseName="myfirstdb" onInit={initializeDatabase}>
       <Tabs
         // initialRouteName={"createWorkout"}
-        initialRouteName={"createWorkout"}
+        initialRouteName={"InWorkout"}
         screenOptions={{
           // Don’t mount a screen until the first time you visit it
           lazy: false,
@@ -77,6 +77,16 @@ export default function TabLayout() {
           name="playground"
           options={{
             title: "playground",
+            tabBarIcon: ({ color }: { color: string }) => (
+              // <IconSymbol size={28} name="plus.circle" color={color} />
+              <Ionicons size={28} name="play-circle" color={color} />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="InWorkout"
+          options={{
+            title: "InWorkout",
             tabBarIcon: ({ color }: { color: string }) => (
               // <IconSymbol size={28} name="plus.circle" color={color} />
               <Ionicons size={28} name="play-circle" color={color} />

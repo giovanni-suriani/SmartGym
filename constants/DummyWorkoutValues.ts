@@ -32,10 +32,10 @@ export const DUMMY_SET_CARDIO: typos.WorkoutSet = {
     id: 2,
     exerciseId: 1,
     position: 3,
-    reps: 8,
-    loadKg: 60,
+    reps: 1,
+    // loadKg: 60,
     isWarmup: false,
-    duration_time_secs: 601, // 10 minutes
+    duration_time_secs: 631, // 10 minutes and 31 seconds
 }
 
 export const DUMMY_EXERCISE1: typos.Exercise = {

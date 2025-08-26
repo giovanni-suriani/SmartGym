@@ -3,22 +3,21 @@ import { ThemedView } from "@/components/ThemedView"
 import { Exercise, WorkoutSet } from "@/constants/types/workout-types"
 import React, { useMemo } from "react"
 import { StyleSheet, ScrollView } from "react-native"
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { useColorScheme } from "@/hooks/useColorScheme"
 import { TouchableOpacity, View } from "react-native"
 import { useState } from "react"
 import { Text } from "react-native"
 import { useWorkoutContext } from "@/hooks/WorkoutContext"
 import WorkoutSetComponent from "./WorkoutSetComponent"
 import { Colors } from "@/constants/Colors"
-import * as testSettings from  "@/settings"
+import * as testSettings from "@/settings"
+import ContentBoxView from "../ui/ContentBoxView"
 
 type Props = {
   focused?: boolean
   exercise: Exercise
-  onDoneDelta?: (value:number) => void
+  onDoneDelta?: (value: number) => void
 }
-
-
 
 /*  
  Without useMemo
@@ -32,7 +31,11 @@ type Props = {
     */
 const ballSize = 48
 
-const ExerciseComponent = ({ focused = false, exercise, onDoneDelta }: Props) => {
+const ExerciseComponent = ({
+  focused = false,
+  exercise,
+  onDoneDelta,
+}: Props) => {
   // const weightUnit = useWeightUnit() // Assuming you have a hook to get the weight unit
   const { loadUnit, timeUnit } = useWorkoutContext()
   const colorScheme = useColorScheme()
@@ -74,15 +77,15 @@ const ExerciseComponent = ({ focused = false, exercise, onDoneDelta }: Props) =>
         onDoneDelta?.(-1)
       }
     }
-    console.debug(`-------------75:ExerciseComponent------------`);
-    console.debug(`Checked reported at index ${index}: ${value}`);
-    console.debug(`checkedsReported: ${newCheckedsReported}`);
-    console.debug(`delta: ${delta}`);
-    console.debug(`--------------------------------------------`);
+    console.debug(`-------------75:ExerciseComponent------------`)
+    console.debug(`Checked reported at index ${index}: ${value}`)
+    console.debug(`checkedsReported: ${newCheckedsReported}`)
+    console.debug(`delta: ${delta}`)
+    console.debug(`--------------------------------------------`)
   }
 
   return (
-    <ThemedView style={styles.container}>
+    <ContentBoxView>
       {/* <ThemedText type={"ft18"}>Oi</ThemedText> */}
       <ThemedText type={"subtitle"}>{exercise.name}:</ThemedText>
       <View style={styles.setsContainer}>
@@ -112,28 +115,27 @@ const ExerciseComponent = ({ focused = false, exercise, onDoneDelta }: Props) =>
               setCheckedsReported(new Array(workoutSets.length).fill(false))
               onDoneDelta?.(-workoutSets.length)
             }
-       
           }}
         >
           <ThemedText>Done</ThemedText>
         </TouchableOpacity>
       </View>
-    </ThemedView>
+    </ContentBoxView>
   )
 }
 
 const createStyles = ({ borderColor }: { borderColor: string }) =>
   StyleSheet.create({
     container: {
-      // flexDirection: "row",
-      // margin: "10%",
+      alignSelf: "stretch",
       marginHorizontal: "10%",
       borderRadius: 10,
-      fontSize: 20,
       borderWidth: 2,
       borderColor,
       paddingHorizontal: "5%",
       paddingVertical: "5%",
+      // flexDirection: "row",
+      // margin: "10%",
       // backgroundColor: "rgba(255, 255, 255, 0.57)", // semi-transparent white
       // borderColor,
       // borderColor: colorScheme === "dark" ? "#fff" : "#000",

@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect, useState, useMemo } from "react"
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context"
 import { View, Text, StyleSheet } from "react-native"
 import { useColorScheme } from "@/hooks/useColorScheme"
@@ -11,10 +11,16 @@ import {
   ExerciseCategory,
   WorkoutSet,
 } from "@/constants/types/workout-types"
-import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons"
+import {
+  Ionicons,
+  MaterialCommunityIcons,
+  FontAwesome,
+} from "@expo/vector-icons"
+import ContentBoxLeftSeparatorRight from "../ui/ContentBoxLeftSeparatorRight"
 
 type Props = {
   exercise: Exercise
+  focused?: boolean
 }
 
 const iconMap: Record<
@@ -35,13 +41,22 @@ const iconMap: Record<
   [ExerciseCategory.OTHER]: "help-circle",
 }
 
-const AddedExerciseComponent = ({ exercise }: Props) => {
+const AddedExerciseComponent = ({ exercise, focused = false }: Props) => {
   const colorScheme = useColorScheme()
   const iconReturn = () => {
     if (exercise?.category === ExerciseCategory.DUMBBELL) {
       return (
         <MaterialCommunityIcons
           name={"dumbbell"}
+          size={24}
+          color={Colors[colorScheme ?? "light"].icon}
+        />
+      )
+    }
+    if (exercise?.category === ExerciseCategory.CARDIO) {
+      return (
+        <FontAwesome
+          name={"heartbeat"}
           size={24}
           color={Colors[colorScheme ?? "light"].icon}
         />
@@ -58,85 +73,43 @@ const AddedExerciseComponent = ({ exercise }: Props) => {
     }
   }
 
-  const [textH, setTextH] = React.useState(0)
+  const [textH, setTextH] = useState(0)
+
+  const leftViewContent = (
+    <>
+      {exercise.category && iconReturn()}
+
+      <ThemedText
+        style={{ flexShrink: 1 }}
+        type="defaultSemiBold"
+        onLayout={(e) => setTextH(e.nativeEvent.layout.height)}
+      >
+        {exercise.name}
+      </ThemedText>
+    </>
+  )
+  // variable = variable ?? defalut value // If not provided (null or undefined), use default value
+  // ifnot
+  const rightViewContent = (
+    <ThemedText style={{ flexShrink: 1 }} type="defaultSemiBold">
+      {exercise?.category === ExerciseCategory.CARDIO
+        ? `${
+            exercise.sets[0]?.duration_time_secs != null
+              ? exercise.sets[0].duration_time_secs / 60
+              : "done"
+          } min`
+        : `${exercise.plannedSets} sets`}
+    </ThemedText>
+  )
 
   return (
-    <ThemedView
-      style={[
-        styles.container,
-        { borderColor: Colors[colorScheme ?? "light"].borderColorUnfocused },
-      ]}
-    >
-      {exercise.category && iconReturn()}
-      {/* <FontAwesome5 name={"dumbbell"} size={24} color={Colors[colorScheme ?? "light"].text} /> */}
-      <View style={{ flexDirection: "row", gap: 10, alignItems: "center" }}>
-        <ThemedText
-          type="defaultSemiBold"
-          // style={[styles.text, { width: "65%" }]}
-          style={{ width: "55%" }}
-          onLayout={(e) => setTextH(e.nativeEvent.layout.height)}
-        >
-          {exercise.name}
-        </ThemedText>
-        {/* Separator Line */}
-        <View
-          style={{
-            // position: "absolute",
-            // left: "67%",
-            // position: "relative"
-            flexDirection: "column",
-            height: textH,
-            backgroundColor: "lightgray",
-            width: 1,
-          }}
-        />
-        {/* Sets Info */}
-        <View
-          style={{
-            flexGrow: 1,
-            flexDirection: "row",
-            justifyContent: "center",
-            backgroundColor: "green",
-            // position: "relative",
-            // width: "10%",
-            // position: "relative",
-            // alignItems: "stretch",
-          }}
-        >
-          {/* <View style={{ flexGrow:1, flexDirection: "row", alignSelf: "center" }}> */}
-          <ThemedText
-            type="defaultSemiBold"
-            style={[styles.text]}
-            // style={[styles.text, {paddingHorizontal:5}]}
-            // style={[styles.text, {alignSelf: "center", backgroundColor: "green"}]}
-          >
-            {exercise.plannedSets} sets
-          </ThemedText>
-        </View>
-      </View>
-    </ThemedView>
+    <ContentBoxLeftSeparatorRight
+      leftViewContent={leftViewContent}
+      rightViewContent={rightViewContent}
+      textH={textH}
+      focused={focused}
+    />
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flexShrink:1,
-    borderWidth: 1,
-    borderRadius: 10,
-    padding: 12,
-    marginHorizontal: "10%",
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 10,
-    // width: "80%",
-    // padding: "2%",
-  },
-  text: {
-    // flexWrap: "wrap",
-    // flexShrink: 1,
-    // backgroundColor: "orange",
-    // width: "70%",
-    // textOverflow: "ellipsis",
-  },
-})
 export default AddedExerciseComponent

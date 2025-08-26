@@ -6,20 +6,68 @@ import { ThemedText } from "@/components/ThemedText"
 import { DUMMY_WORKOUT } from "@/constants/DummyWorkoutValues"
 import ExerciseComponent from "@/components/in-workout-gym-stuff/ExerciseComponent"
 import WorkoutComponent from "@/components/in-workout-gym-stuff/WorkoutComponent"
-
+import ContentBoxView from "@/components/ui/ContentBoxView"
+import ContentBoxLeftSeparatorRight from "@/components/ui/ContentBoxLeftSeparatorRight"
+import { useState } from "react"
+import { Ionicons } from "@expo/vector-icons"
+import { ExerciseCategory } from "@/constants/types/workout-types"
+// import { DUMMY_WORKOUT } from "@/constants/DummyWorkoutValues"
 
 const ComponentName = () => {
+  const [textH, setTextH] = useState(0)
+  const iconMap: Record<
+    ExerciseCategory,
+    | "bicycle"
+    | "body-outline"
+    | "barbell"
+    | "git-pull-request"
+    | "settings"
+    | "help-circle"
+  > = {
+    [ExerciseCategory.CARDIO]: "bicycle",
+    [ExerciseCategory.BODYWEIGHT]: "body-outline",
+    [ExerciseCategory.DUMBBELL]: "body-outline",
+    [ExerciseCategory.BARBELL]: "barbell",
+    [ExerciseCategory.CABLE]: "git-pull-request",
+    [ExerciseCategory.SMITH_MACHINE]: "settings",
+    [ExerciseCategory.OTHER]: "help-circle",
+  }
+
+  const leftViewContent = (
+    <>
+      <Ionicons name="bicycle" size={24} color={"orange"} />
+      <ThemedText
+        style={{ flexShrink: 1 }}
+        type="defaultSemiBold"
+        onLayout={(e) => setTextH(e.nativeEvent.layout.height)}
+      >
+        This is the content to put on left
+      </ThemedText>
+    </>
+  )
+
+  const rightViewContent = (
+    <ThemedText type="defaultSemiBold">{/* Right Content */}4 sets</ThemedText>
+  )
+
   return (
-    <WorkoutComponent workout={DUMMY_WORKOUT} focused={false}/>
+    <SafeAreaProvider>
+      <SafeAreaView style={styles.container}>
+        <ContentBoxLeftSeparatorRight
+          textH={textH}
+          leftViewContent={leftViewContent}
+          rightViewContent={rightViewContent}
+        ></ContentBoxLeftSeparatorRight>
+      </SafeAreaView>
+    </SafeAreaProvider>
   )
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignContent: "center",
-    justifyContent: "center",
+    // alignContent: "center",
+    // justifyContent: "center",
   },
-  
 })
 export default ComponentName

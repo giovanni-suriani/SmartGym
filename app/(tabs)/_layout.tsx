@@ -22,10 +22,11 @@ export default function TabLayout() {
     // <SQLiteProvider databaseName="myfirstdb" onInit={initializeDatabase}>
     <SQLiteProvider databaseName="myfirstdb" onInit={restartDatabase}>
       <Tabs
+        // initialRouteName={"createWorkout"}
         initialRouteName={"createWorkout"}
         screenOptions={{
           // Don’t mount a screen until the first time you visit it
-          lazy: true,
+          lazy: false,
 
           // When you leave a tab, pause its React tree (no re-renders)
           freezeOnBlur: true,

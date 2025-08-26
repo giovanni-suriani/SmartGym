@@ -85,7 +85,7 @@ const WorkoutComponent = ({ workout, focused = false }: Props) => {
 
   return (
     <SafeAreaProvider>
-      <SafeAreaView style={styles.safeAreaContainer}>
+      <SafeAreaView style={styles.container}>
         {/* <ThemedView style={[styles.themedContainer, { marginBottom: paddingBottomFlatList }]}> */}
         <ThemedView style={styles.themedContainer}>
           <ThemedText
@@ -128,7 +128,7 @@ const WorkoutComponent = ({ workout, focused = false }: Props) => {
             )}
             keyExtractor={(item) => item.id.toString()}
             // style={{ alignItems:"center"}} // Or "width: '100%'"
-            style={{ alignSelf: "stretch" }} // Or "width: '100%'"
+            // style={{ alignSelf: "stretch" }} // Or "width: '100%'"
             // contentContainerStyle={styles.flatListContentStyle}
             contentContainerStyle={[
               styles.flatListContentStyle,
@@ -153,6 +153,9 @@ const WorkoutComponent = ({ workout, focused = false }: Props) => {
               </Pressable>
             }
           />
+          {/* <View style={{ alignSelf: "stretch"}}>
+            <ExerciseComponent exercise={workout.exercises[0]} />
+          </View> */}
         </ThemedView>
       </SafeAreaView>
     </SafeAreaProvider>
@@ -160,24 +163,24 @@ const WorkoutComponent = ({ workout, focused = false }: Props) => {
 }
 
 const styles = StyleSheet.create({
-  safeAreaContainer: {
+  container: {
     flex: 1,
   },
   themedContainer: {
     flexGrow: 1,
     alignItems: "center",
     gap: 20,
-    // marginBottom: 40,
+    marginBottom: 40,
     // paddingBottom:200
     // justifyContent: "center",
     // backgroundColor: "rgba(16, 163, 126, 0.1)",
   },
   titleText: {
-    // textDecorationLine: "underline",
     marginTop: "10%",
     borderBottomWidth: 4, // thickness
     borderRadius: 3,
     paddingBottom: 3, // space between text and border
+    // textDecorationLine: "underline",
     // borderBottomColor: Colors[colorScheme ?? "light"].borderColorUnfocused,
     // marginBottom: 15,
   },

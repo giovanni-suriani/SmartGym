@@ -6,11 +6,13 @@ import { ThemedText } from "@/components/ThemedText"
 import { DUMMY_WORKOUT } from "@/constants/DummyWorkoutValues"
 import ExerciseComponent from "@/components/in-workout-gym-stuff/ExerciseComponent"
 import WorkoutComponent from "@/components/in-workout-gym-stuff/WorkoutComponent"
+import CongratsConfetti from "@/components/ui/CongratsConfetti"
 
 
 const ComponentName = () => {
   return (
     <WorkoutComponent workout={DUMMY_WORKOUT} focused={false}/>
+    // <CongratsConfetti fire={true}/>
   )
 }
 

@@ -1,6 +1,6 @@
 import React from "react"
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context"
-import { View, Text, StyleSheet } from "react-native"
+import { View, Text, StyleSheet, Pressable } from "react-native"
 import { ThemedView } from "@/components/ThemedView"
 import { ThemedText } from "@/components/ThemedText"
 import { useSQLiteContext } from "expo-sqlite"
@@ -10,11 +10,15 @@ import { Ionicons } from "@expo/vector-icons"
 import AddedExerciseComponent from "@/components/create-workout-stuff/AddedExerciseComponent"
 import { DUMMY_WORKOUT } from "@/constants/DummyWorkoutValues"
 import ExerciseComponent from "@/components/in-workout-gym-stuff/ExerciseComponent"
+import { Colors } from "@/constants/Colors"
+import { useColorScheme } from "@/hooks/useColorScheme"
 // import { DUMMY_EXERCISE4 } from "@/constants/DummyWorkoutValues"
 
 const createWorkout = () => {
   const db = useSQLiteContext()
+  const colorScheme = useColorScheme() 
 
+  // Colors[colorScheme ?? "light"].borderColorUnfocused
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
@@ -24,7 +28,14 @@ const createWorkout = () => {
             Create Workout
           </ThemedText>
           {/* Icon to add  */}
-          <Ionicons name="add-circle" size={100} color="gray" />
+          <Pressable
+            onPress={() => {
+              console.log("Add workout pressed")
+            }}
+            hitSlop={20}
+          >
+            <Ionicons name="add-circle" size={75} color="grey" />
+          </Pressable>
           <ThemedText
             type="default"
             style={{ maxWidth: 300, textAlign: "center" }}
@@ -32,9 +43,9 @@ const createWorkout = () => {
             Press the icon above to create your first workout!
           </ThemedText>
           {/* <View style={{ alignSelf: "stretch"}}> */}
-            {/* <ExerciseComponent exercise={DUMMY_WORKOUT.exercises[0]} /> */}
-          <AddedExerciseComponent exercise={DUMMY_WORKOUT.exercises[0]} />
-          <AddedExerciseComponent exercise={DUMMY_WORKOUT.exercises[1]} />
+          {/* <ExerciseComponent exercise={DUMMY_WORKOUT.exercises[0]} /> */}
+          {/* <AddedExerciseComponent exercise={DUMMY_WORKOUT.exercises[0]} /> */}
+          {/* <AddedExerciseComponent exercise={DUMMY_WORKOUT.exercises[1]} /> */}
           {/* <AddedExerciseComponent exercise={DUMMY_WORKOUT.exercises[4]} /> */}
           {/* <AddedExerciseComponent exercise={DUMMY_WORKOUT.exercises[2]} /> */}
           {/* <AddedExerciseComponent exercise={DUMMY_WORKOUT.exercises[3]} /> */}

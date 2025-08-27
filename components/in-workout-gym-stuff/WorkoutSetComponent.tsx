@@ -5,7 +5,8 @@ import { useState } from "react"
 import { ThemedText } from "@/components/ThemedText"
 import { ThemedView } from "@/components/ThemedView"
 import { useWorkoutContext } from "@/hooks/WorkoutContext"
-import Checkbox from "expo-checkbox"
+// import Checkbox from "expo-checkbox"
+import Checkbox from "@/components/ui/WorkoutSetCheckbox"
 import { StyleProp, ViewStyle } from "react-native"
 import * as testSettings from "@/settings"
 
@@ -103,6 +104,9 @@ const WorkoutSetComponent = ({
           style={styles.checkbox}
           value={checked === 1 || checked === 2}
           onValueChange={onToggle} // passing a callback function
+          // hitSlop={{ top: 10, bottom: 10, left: 40, right: 10 }}
+          hitSlop={{ top: 10, bottom: 10, left: 30, right: 20 }}
+          // showHitSlop={true}
           // onValueChange={setChecked, handleChildCheckChange}
           color={colorChecked()}
         />
@@ -111,7 +115,7 @@ const WorkoutSetComponent = ({
   )
 }
 
-const checkboxSize = 24
+const checkboxSize = 32
 
 const styles = StyleSheet.create({
   container: {
@@ -135,9 +139,10 @@ const styles = StyleSheet.create({
     textDecorationStyle: "dashed",
   },
   checkbox: {
-    width: checkboxSize * 1.2,
+    width: checkboxSize * 1.25,
     height: checkboxSize,
     borderRadius: 10,
+    // paddingHorizontal
     // backgroundColor: "rgba(255, 255, 255, 0.57)", // semi-transparent white
     // margin: 8,
   },

@@ -1,0 +1,80 @@
+// WorkoutTextInput.tsx
+import React from "react"
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context"
+import { View, Text, StyleSheet } from "react-native"
+import { Colors } from "@/constants/Colors"
+import { ThemedView } from "@/components/ThemedView"
+import { ThemedText } from "@/components/ThemedText"
+import { useColorScheme } from "@/hooks/useColorScheme"
+import { TextInput } from "react-native"
+import { TextInputProps, StyleProp, TextStyle } from "react-native"
+
+// type Props = TextInputProps & {
+//   style?: StyleProp<TextStyle>
+// }
+type Props = TextInputProps & {
+  type?: "default" | "title" | "defaultSemiBold" | "subtitle" | "link"
+}
+
+const WorkoutTextInput = ({
+  style,
+  type = 'default',
+  placeholderTextColor,
+  ...otherProps
+}: Props) => {
+  const colorScheme = useColorScheme()
+  return (
+    <TextInput
+      style={[
+        type === "default" ? styles.default : undefined,
+        type === "title" ? styles.title : undefined,
+        type === "defaultSemiBold" ? styles.defaultSemiBold : undefined,
+        type === "subtitle" ? styles.subtitle : undefined,
+        type === "link" ? styles.link : undefined,
+        {
+          borderRadius: 8,
+          height: 50,
+          borderColor: Colors[colorScheme ?? "light"].borderColorUnfocused,
+          borderWidth: 1,
+          marginHorizontal: "10%",
+          padding: 10,
+          color: Colors[colorScheme ?? "light"].text,
+        },
+      ]}
+      placeholderTextColor={Colors[colorScheme ?? "light"].placeholderText}
+      // placeholder="Type here to translate!"
+      {...otherProps}
+    />
+  )
+}
+
+export default WorkoutTextInput
+
+const styles = StyleSheet.create({
+  default: {
+    fontSize: 16,
+    lineHeight: 24,
+  },
+  defaultSemiBold: {
+    fontSize: 16,
+    lineHeight: 24,
+    fontWeight: "600",
+  },
+  title: {
+    fontSize: 32,
+    fontWeight: "bold",
+    lineHeight: 32,
+  },
+  subtitle: {
+    fontSize: 20,
+    fontWeight: "bold",
+  },
+  link: {
+    lineHeight: 30,
+    fontSize: 16,
+    color: "#0a7ea4",
+  },
+  ft18: {
+    fontSize: 18,
+  },
+})

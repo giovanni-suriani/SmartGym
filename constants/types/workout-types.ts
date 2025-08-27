@@ -31,7 +31,7 @@ export type Exercise = Readonly<{
   category?: ExerciseCategory;
   restSec?: number;             // planned rest
   notes?: string;
-  loadUnit?: 'kg' | 'lb'; 
+  loadUnit?: 'kg' | 'lb';       // *setted on WorkoutContext  
   progress_rate?: number;       // e.g. 2.5%/week
   position: number;             // 0..N-1 within the workout
   plannedSets: number;          // number of work sets planned

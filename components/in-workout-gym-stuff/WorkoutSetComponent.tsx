@@ -5,7 +5,8 @@ import { useState } from "react"
 import { ThemedText } from "@/components/ThemedText"
 import { ThemedView } from "@/components/ThemedView"
 import { useWorkoutContext } from "@/hooks/WorkoutContext"
-import Checkbox from "expo-checkbox"
+// import Checkbox from "expo-checkbox"
+import Checkbox from "@/components/ui/WorkoutSetCheckbox"
 import { StyleProp, ViewStyle } from "react-native"
 import * as testSettings from "@/settings"
 
@@ -13,7 +14,7 @@ type Props = {
   style?: StyleProp<ViewStyle>
   workoutSet: WorkoutSet
   forceDone?: number
-  handleCheckChange?: (value: boolean) => void
+  handleCheckChange?: (value: number) => void
 }
 
 const WorkoutSetComponent = ({
@@ -23,25 +24,40 @@ const WorkoutSetComponent = ({
   forceDone,
 }: Props) => {
   const { loadUnit, timeUnit, showWorkoutSetCheckbox } = useWorkoutContext()
-  const [checked, setChecked] = useState(false)
+  const [checked, setChecked] = useState<number>(0)
 
   useEffect(() => {
     if ((forceDone ?? 0) > 0) {
-      if (!checked) {
-        setChecked(true)
-        // handleCheckChange?.(true)
+      if (checked === 0) {
+        setChecked(1)
+        handleCheckChange?.(1)
       }
       if (testSettings.TEST_DONE_BUTTON && forceDone === 2) {
-        setChecked(false)
-        // handleCheckChange?.(false)
+        setChecked(0)
+        handleCheckChange?.(0)
       }
     }
   }, [forceDone]) // when dependencies change, the effect runs again
   // empty dependencies array [] means the effect runs only once after the initial render
 
   const onToggle = (value: boolean) => {
-    setChecked(value)
-    handleCheckChange?.(value)
+    switch (true) {
+      case value && checked === 0:
+        setChecked(1)
+        handleCheckChange?.(1)
+        break;
+      case !value && checked === 1:
+        setChecked(2)
+        handleCheckChange?.(2)
+        break;
+      case !value && checked === 2:
+        setChecked(0)
+        handleCheckChange?.(0)
+        break;
+      default:
+        break;
+    }
+
   }
 
   const textCardioOrWeight = () => {
@@ -63,10 +79,21 @@ const WorkoutSetComponent = ({
     return `Wrong Data Provided`
   }
 
+  const colorChecked = () => {
+    if (checked === 1) {
+      return "rgb(0, 172, 14)"
+      // return "red"
+    }
+    if (checked === 2) {
+      return "red"
+    }
+    return undefined
+  }
+
   return (
     <View style={[styles.container, style]}>
       <View style={[styles.rowText]}>
-        <ThemedText type={"default"} style={checked && styles.dashedText}>
+        <ThemedText type={"default"} style={(checked === 1 || checked === 2) && styles.dashedText}>
           {`${workoutSet.position}. `}
           {`${workoutSet.isWarmup ? "Warmup Set" : "Working Set"}: `}
           {textCardioOrWeight()}
@@ -75,17 +102,20 @@ const WorkoutSetComponent = ({
       {showWorkoutSetCheckbox && (
         <Checkbox
           style={styles.checkbox}
-          value={checked}
+          value={checked === 1 || checked === 2}
           onValueChange={onToggle} // passing a callback function
+          // hitSlop={{ top: 10, bottom: 10, left: 40, right: 10 }}
+          hitSlop={{ top: 10, bottom: 10, left: 30, right: 20 }}
+          // showHitSlop={true}
           // onValueChange={setChecked, handleChildCheckChange}
-          color={checked ? "rgb(0, 172, 14)" : undefined}
+          color={colorChecked()}
         />
       )}
     </View>
   )
 }
 
-const checkboxSize = 24
+const checkboxSize = 32
 
 const styles = StyleSheet.create({
   container: {
@@ -109,9 +139,10 @@ const styles = StyleSheet.create({
     textDecorationStyle: "dashed",
   },
   checkbox: {
-    width: checkboxSize * 1.2,
+    width: checkboxSize * 1.25,
     height: checkboxSize,
     borderRadius: 10,
+    // paddingHorizontal
     // backgroundColor: "rgba(255, 255, 255, 0.57)", // semi-transparent white
     // margin: 8,
   },

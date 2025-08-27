@@ -22,8 +22,9 @@ export default function TabLayout() {
     // <SQLiteProvider databaseName="myfirstdb" onInit={restartDatabase}>
     <SQLiteProvider databaseName="myfirstdb" onInit={initializeDatabase}>
       <Tabs
+        initialRouteName={"playground"}
+        // initialRouteName={"InWorkout"}
         // initialRouteName={"createWorkout"}
-        initialRouteName={"InWorkout"}
         screenOptions={{
           // Don’t mount a screen until the first time you visit it
           lazy: false,
@@ -89,7 +90,17 @@ export default function TabLayout() {
             title: "InWorkout",
             tabBarIcon: ({ color }: { color: string }) => (
               // <IconSymbol size={28} name="plus.circle" color={color} />
-              <Ionicons size={28} name="play-circle" color={color} />
+              <Ionicons size={28} name="bookmark" color={color} />
+            ),
+          }}
+        />
+        <Tabs.Screen
+          name="playgroundComponent"
+          options={{
+            title: "playgroundComponent",
+            tabBarIcon: ({ color }: { color: string }) => (
+              // <IconSymbol size={28} name="plus.circle" color={color} />
+              <Ionicons size={28} name="logo-playstation" color={color} />
             ),
           }}
         />

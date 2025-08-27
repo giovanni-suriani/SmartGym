@@ -29,6 +29,7 @@ export const Colors = {
     /* Gym Components colors */
     borderColorFocused: '#dda',
     borderColorUnfocused: 'rgb(0, 0, 0)',
+    placeholderText: '#a0a0a0',
   },
   dark: {
     text: '#ECEDEE',
@@ -40,5 +41,6 @@ export const Colors = {
     /* Gym Components colors */
     borderColorFocused: '#bbb',
     borderColorUnfocused: '#fff',
+    placeholderText: '#555555',
   },
 };

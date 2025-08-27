@@ -132,23 +132,7 @@ const WorkoutComponent = ({ workout, focused = false }: Props) => {
           >
             {workout.name}
           </ThemedText>
-          {showWorkoutProgressBar && (
-            <Progress.Bar
-              progress={progress}
-              width={200}
-              height={10}
-              color={barColor as any}
-              style={{ marginBottom: 15 }}
-              animated={true}
-              animationType="spring"
-              animationConfig={{ bounciness: 10 }}
-              borderColor={
-                focused
-                  ? Colors[colorScheme ?? "light"].borderColorFocused
-                  : Colors[colorScheme ?? "light"].borderColorUnfocused
-              }
-            />
-          )}
+          {showWorkoutProgressBar && <WorkoutProgressBar progress={progress} />}
           <FlatList
             data={workout.exercises}
             renderItem={({ item }) => (
@@ -189,7 +173,7 @@ const WorkoutComponent = ({ workout, focused = false }: Props) => {
                 }}
               >
                 <ThemedText>Finish Workout</ThemedText>
-                {fire && <CongratsConfetti fire={true} />}
+                <CongratsConfetti fire={fire} />
               </Pressable>
             }
           />
@@ -217,7 +201,7 @@ const styles = StyleSheet.create({
   },
   titleText: {
     marginTop: "10%",
-    // borderBottomWidth: 4, // thickness
+    borderBottomWidth: 4, // thickness
     borderRadius: 3,
     paddingBottom: 3, // space between text and border
     // textDecorationLine: "underline",

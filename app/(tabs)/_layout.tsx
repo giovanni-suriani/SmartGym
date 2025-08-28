@@ -63,7 +63,7 @@ export default function TabLayout() {
             ),
           }}
         />
-        <Tabs.Screen
+        {/* <Tabs.Screen
           name="statistics"
           options={{
             title: "Statistics",
@@ -73,7 +73,7 @@ export default function TabLayout() {
               // <IconSymbol size={28} name="bar-chart" color={color} />
             ),
           }}
-        />
+        /> */}
         <Tabs.Screen
           name="playground"
           options={{

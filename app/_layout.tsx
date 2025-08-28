@@ -30,6 +30,7 @@ export default function RootLayout() {
       <WorkoutProvider>
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="statistics" />
           <Stack.Screen name="+not-found" />
         </Stack>
         <StatusBar style="auto" />

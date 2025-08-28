@@ -6,3 +6,16 @@ export const contentBoxViewConstants: ViewStyle = {
   borderRadius: 10, 
   borderWidth: 2 
 };
+
+type workoutInputType = ViewStyle & {
+  labelInputGap: number
+}
+
+export const workoutInputConstants: workoutInputType = {
+  borderRadius: 8,
+  height: 50,
+  borderWidth: 1,
+  padding: 10,
+  labelInputGap: 10,
+  marginHorizontal: "10%" as DimensionValue,
+};

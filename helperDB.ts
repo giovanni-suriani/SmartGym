@@ -51,12 +51,12 @@ CREATE TABLE IF NOT EXISTS exercises (
 CREATE TABLE IF NOT EXISTS sets (
   id                 INTEGER PRIMARY KEY AUTOINCREMENT,
   exercise_id        TEXT    NOT NULL REFERENCES exercises(id) ON DELETE CASCADE,
-  position           INTEGER NOT NULL CHECK (position > 0),  -- 0..N within the exercise
+  position           INTEGER NOT NULL CHECK (position > 0),             -- 0..N within the exercise
   reps               INTEGER NOT NULL CHECK (reps > 0),
   load_kg            REAL    NOT NULL CHECK (load_kg >= 0),
-  rpe                REAL,                                   -- optional: perceived effort
+  rpe                REAL,                                              -- optional: perceived effort
   duration_time_secs INTEGER CHECK (duration_time_secs >= 0) DEFAULT 0, -- in seconds, for cardio
-  is_warmup          BOOLEAN NOT NULL DEFAULT 0,             -- 0=false, 1=true
+  is_warmup          BOOLEAN NOT NULL DEFAULT 0,                        -- 0=false, 1=true
   UNIQUE(exercise_id, position)
 );
 

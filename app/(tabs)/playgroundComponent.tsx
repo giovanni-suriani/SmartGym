@@ -59,7 +59,7 @@ const playground = () => {
           leftViewContent={leftViewContent}
           rightViewContent={rightViewContent}
         ></ContentBoxLeftSeparatorRight> */}
-        <CreatingExercise position={0} />
+        {/* <CreatingExercise position={0} /> */}
       </SafeAreaView>
     </SafeAreaProvider>
   )

@@ -8,49 +8,66 @@ import { ThemedText } from "@/components/ThemedText"
 import { useColorScheme } from "@/hooks/useColorScheme"
 import { TextInput } from "react-native"
 import { TextInputProps, StyleProp, TextStyle } from "react-native"
+import { workoutInputConstants } from "@/constants/UIConstants"
 
 // type Props = TextInputProps & {
 //   style?: StyleProp<TextStyle>
 // }
 type Props = TextInputProps & {
   type?: "default" | "title" | "defaultSemiBold" | "subtitle" | "link"
+  label?: string
 }
 
 const WorkoutTextInput = ({
   style,
-  type = 'default',
+  label,
+  type = "default",
   placeholderTextColor,
   ...otherProps
 }: Props) => {
   const colorScheme = useColorScheme()
   return (
-    <TextInput
-      style={[
-        type === "default" ? styles.default : undefined,
-        type === "title" ? styles.title : undefined,
-        type === "defaultSemiBold" ? styles.defaultSemiBold : undefined,
-        type === "subtitle" ? styles.subtitle : undefined,
-        type === "link" ? styles.link : undefined,
-        {
-          borderRadius: 8,
-          height: 50,
-          borderColor: Colors[colorScheme ?? "light"].borderColorUnfocused,
-          borderWidth: 1,
-          marginHorizontal: "10%",
-          padding: 10,
-          color: Colors[colorScheme ?? "light"].text,
-        },
-      ]}
-      placeholderTextColor={Colors[colorScheme ?? "light"].placeholderText}
-      // placeholder="Type here to translate!"
-      {...otherProps}
-    />
+    <View style={styles.container}>
+      {
+        label &&
+        <ThemedText
+        type="subtitle"
+        >
+          {label}
+      </ThemedText>
+      }
+      <TextInput
+        style={[
+          type === "default" ? styles.default : undefined,
+          type === "title" ? styles.title : undefined,
+          type === "defaultSemiBold" ? styles.defaultSemiBold : undefined,
+          type === "subtitle" ? styles.subtitle : undefined,
+          type === "link" ? styles.link : undefined,
+          {
+            borderRadius: 8,
+            height: 50,
+            borderColor: Colors[colorScheme ?? "light"].borderColorUnfocused,
+            borderWidth: 1,
+            padding: 10,
+            color: Colors[colorScheme ?? "light"].text,
+          },
+        ]}
+        placeholderTextColor={Colors[colorScheme ?? "light"].placeholderText}
+        // placeholder="Type here to translate!"
+        {...otherProps}
+      />
+    </View>
   )
 }
 
 export default WorkoutTextInput
 
 const styles = StyleSheet.create({
+  container:{
+    flexShrink: 1,
+    gap: workoutInputConstants.labelInputGap,
+    marginHorizontal: workoutInputConstants.marginHorizontal,
+  },
   default: {
     fontSize: 16,
     lineHeight: 24,

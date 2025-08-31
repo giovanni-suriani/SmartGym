@@ -41,5 +41,14 @@
 
 		],
 		"description": "Import calculateTotalSets function from WorkoutMetrics"
-	}
+	},
+	"helperDb":{
+		"scope": "javascript,typescript, typescriptreact",
+		"prefix": "helperdb",
+		"body": [
+			"import * as helperDB from '@/helperDB'"
+
+		],
+		"description": "Import all helperDB functions"
+	},
 }

@@ -26,6 +26,7 @@ const WorkoutTextInput = ({
   ...otherProps
 }: Props) => {
   const colorScheme = useColorScheme()
+  const theme = Colors[colorScheme ?? "light"]
   return (
     <View style={styles.container}>
       {
@@ -45,14 +46,14 @@ const WorkoutTextInput = ({
           type === "link" ? styles.link : undefined,
           {
             borderRadius: 8,
-            height: 50,
-            borderColor: Colors[colorScheme ?? "light"].borderColorUnfocused,
-            borderWidth: 1,
+            height: workoutInputConstants.height,
+            borderColor: theme.borderColorUnfocused,
+            borderWidth: workoutInputConstants.borderWidth,
             padding: 10,
-            color: Colors[colorScheme ?? "light"].text,
+            color: theme.text,
           },
         ]}
-        placeholderTextColor={Colors[colorScheme ?? "light"].placeholderText}
+        placeholderTextColor={theme.placeholderText}
         // placeholder="Type here to translate!"
         {...otherProps}
       />

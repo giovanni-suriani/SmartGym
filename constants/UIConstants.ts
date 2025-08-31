@@ -14,7 +14,7 @@ type workoutInputType = ViewStyle & {
 export const workoutInputConstants: workoutInputType = {
   borderRadius: 8,
   height: 50,
-  borderWidth: 1,
+  borderWidth: 2,
   padding: 10,
   labelInputGap: 10,
   marginHorizontal: "10%" as DimensionValue,

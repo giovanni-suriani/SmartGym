@@ -11,7 +11,7 @@ import { useWorkoutContext } from "@/hooks/WorkoutContext"
 import WorkoutSetComponent from "./WorkoutSetComponent"
 import { Colors } from "@/constants/Colors"
 import * as testSettings from "@/settings"
-import ContentBoxView from "../ui/ContentBoxView"
+import ContentBoxView from "../ui/workoutBoxes/ContentBoxView"
 
 type Props = {
   focused?: boolean

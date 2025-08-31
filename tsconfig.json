@@ -13,5 +13,5 @@
     "logger.ts",
     ".expo/types/**/*.ts",
     "expo-env.d.ts"
-  ]
+, "components/.bak/ContentBoxTable copy.tsx"  ]
 }

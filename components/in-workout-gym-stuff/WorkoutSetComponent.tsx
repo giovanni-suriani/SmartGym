@@ -68,13 +68,13 @@ const WorkoutSetComponent = ({
     const workoutSetRepsString = workoutSet.reps > 1 ? `${workoutSet.reps} x ` : ""
     
     if (
-      workoutSet.duration_time_secs !== undefined &&
-      (timeUnit === "sec" || workoutSet.duration_time_secs < 60)
+      workoutSet.durationTimeSecs !== undefined &&
+      (timeUnit === "sec" || workoutSet.durationTimeSecs < 60)
     ) {
-      return `${workoutSetRepsString}${workoutSet.duration_time_secs} ${timeUnit}`
+      return `${workoutSetRepsString}${workoutSet.durationTimeSecs} ${timeUnit}`
     }
-    if (workoutSet.duration_time_secs !== undefined && timeUnit === "min") {
-      return `${workoutSetRepsString}${(workoutSet.duration_time_secs / 60).toFixed(1)} ${timeUnit}`
+    if (workoutSet.durationTimeSecs !== undefined && timeUnit === "min") {
+      return `${workoutSetRepsString}${(workoutSet.durationTimeSecs / 60).toFixed(1)} ${timeUnit}`
     }
     return `Wrong Data Provided`
   }

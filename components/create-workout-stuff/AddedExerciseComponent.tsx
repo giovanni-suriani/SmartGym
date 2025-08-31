@@ -17,7 +17,7 @@ import {
   MaterialCommunityIcons,
   FontAwesome,
 } from "@expo/vector-icons"
-import ContentBoxLeftSeparatorRight from "../ui/ContentBoxLeftSeparatorRight"
+import ContentBoxLeftSeparatorRight from "../ui/workoutBoxes/ContentBoxLeftSeparatorRight"
 
 type Props = {
   exercise: Exercise
@@ -93,17 +93,17 @@ const AddedExerciseComponent = ({ exercise, focused = false }: Props) => {
 
   const rightViewText = () => {
     if (exercise?.category === ExerciseCategory.CARDIO && timeUnit == 'min' ) {
-      return `${exercise.plannedSets} x ${(
-        (exercise.sets[0]?.duration_time_secs ?? 0) / 60
+      return `${exercise.sets.length} x ${(
+        (exercise.sets[0]?.durationTimeSecs ?? 0) / 60
       ).toFixed(1)} ${timeUnit}`
     } 
     if (exercise?.category === ExerciseCategory.CARDIO && timeUnit == 'sec' ) {
-      return `${exercise.plannedSets} x ${(
-        (exercise.sets[0]?.duration_time_secs ?? 0) / 60
+      return `${exercise.sets.length} x ${(
+        (exercise.sets[0]?.durationTimeSecs ?? 0) / 60
       ).toFixed(1)} ${timeUnit}`
     } 
     else {
-      return `${exercise.plannedSets} sets`
+      return `${exercise.sets.length} sets`
     }
   }
   const rightViewContent = (

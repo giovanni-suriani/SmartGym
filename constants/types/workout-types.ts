@@ -28,25 +28,23 @@ export type Exercise = Readonly<{
   workoutId: number;
   name: string;
   weightGap?: number;           // e.g. 2.5kg plates
-  category?: ExerciseCategory;
+  category: ExerciseCategory;
   restSec?: number;             // planned rest
   notes?: string;
   loadUnit?: 'kg' | 'lb';       // *setted on WorkoutContext  
-  progress_rate?: number;       // e.g. 2.5%/week
+  progressRate?: number;       // e.g. 2.5%/week
   position: number;             // 0..N-1 within the workout
-  plannedSets: number;          // number of work sets planned
   sets: ReadonlyArray<WorkoutSet>;
 }>;
 
 /** Atomic training unit */
 export type WorkoutSet = Readonly<{
-  id: number;
   exerciseId: number;
   position: number;     // 0..N-1 within the exercise
   reps: number;
   loadKg?: number;
   rpe?: number;
   isWarmup: boolean;
-  duration_time_secs?: number;    // in seconds, for cardio
+  durationTimeSecs?: number;    // in seconds, for cardio
 }>;
 

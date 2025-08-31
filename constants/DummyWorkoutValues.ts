@@ -1,17 +1,14 @@
 import * as typos from "./types/workout-types";
 
 export const DUMMY_SET1: typos.WorkoutSet = {
-    id: 1,
     exerciseId: 1,
     position: 1,
     reps: 4,
     loadKg: 40,
-
     isWarmup: true,
 }
 
 export const DUMMY_SET2: typos.WorkoutSet = {
-    id: 2,
     exerciseId: 1,
     position: 2,
     reps: 8,
@@ -20,7 +17,6 @@ export const DUMMY_SET2: typos.WorkoutSet = {
 }
 
 export const DUMMY_SET3: typos.WorkoutSet = {
-    id: 2,
     exerciseId: 1,
     position: 3,
     reps: 8,
@@ -29,13 +25,12 @@ export const DUMMY_SET3: typos.WorkoutSet = {
 }
 
 export const DUMMY_SET_CARDIO: typos.WorkoutSet = {
-    id: 2,
     exerciseId: 1,
     position: 3,
     reps: 1,
     // loadKg: 60,
     isWarmup: false,
-    duration_time_secs: 631, // 10 minutes and 31 seconds
+    durationTimeSecs: 631, // 10 minutes and 31 seconds
 }
 
 export const DUMMY_EXERCISE1: typos.Exercise = {
@@ -45,7 +40,6 @@ export const DUMMY_EXERCISE1: typos.Exercise = {
     name: "Bench Press",
     category: typos.ExerciseCategory.BARBELL,
     restSec: 90,
-    plannedSets: 2,
     sets: [DUMMY_SET1, DUMMY_SET2, DUMMY_SET3],
 }
 
@@ -56,7 +50,6 @@ export const DUMMY_EXERCISE2: typos.Exercise = {
     name: "Peck Deck",
     category: typos.ExerciseCategory.BARBELL,
     restSec: 90,
-    plannedSets: 2,
     sets: [DUMMY_SET1, DUMMY_SET2, DUMMY_SET3],
 }
 
@@ -67,7 +60,6 @@ export const DUMMY_EXERCISE3: typos.Exercise = {
     name: "Dumbell Flyes",
     category: typos.ExerciseCategory.DUMBBELL,
     restSec: 90,
-    plannedSets: 2,
     sets: [DUMMY_SET1, DUMMY_SET2, DUMMY_SET3],
 }
 
@@ -79,7 +71,6 @@ export const DUMMY_EXERCISE_DUMBBELL: typos.Exercise = {
     name: "Dumbell Press",
     category: typos.ExerciseCategory.DUMBBELL,
     restSec: 90,
-    plannedSets: 2,
     sets: [DUMMY_SET1, DUMMY_SET2, DUMMY_SET3],
 }
 
@@ -90,7 +81,6 @@ export const DUMMY_EXERCISE_WEIGHT: typos.Exercise = {
     name: "Push Ups",
     category: typos.ExerciseCategory.BODYWEIGHT,
     restSec: 90,
-    plannedSets: 2,
     sets: [DUMMY_SET1, DUMMY_SET2, DUMMY_SET3],
 }
 
@@ -101,7 +91,6 @@ export const DUMMY_EXERCISE_CABLE: typos.Exercise = {
     name: "Cross Cable Flyes Overflow Things",
     category: typos.ExerciseCategory.CABLE,
     restSec: 90,
-    plannedSets: 20,
     sets: [DUMMY_SET1, DUMMY_SET2, DUMMY_SET3],
 }
 
@@ -112,7 +101,6 @@ export const DUMMY_EXERCISE_SMITH: typos.Exercise = {
     name: "Smith Bench Press Really Long Name Here To Test Overflow",
     category: typos.ExerciseCategory.SMITH_MACHINE,
     restSec: 90,
-    plannedSets: 2,
     sets: [DUMMY_SET1, DUMMY_SET2, DUMMY_SET3],
 }
 
@@ -124,7 +112,6 @@ export const DUMMY_EXERCISE_CARDIO: typos.Exercise = {
     name: "Walking on Treadmill",
     category: typos.ExerciseCategory.CARDIO,
     restSec: 90,
-    plannedSets: 2,
     sets: [DUMMY_SET_CARDIO],
 }
 

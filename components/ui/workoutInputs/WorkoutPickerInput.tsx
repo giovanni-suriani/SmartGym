@@ -4,8 +4,8 @@ import { View } from "react-native"
 import { Picker, PickerProps } from "@react-native-picker/picker"
 import { Colors } from "@/constants/Colors"
 import { useColorScheme } from "@/hooks/useColorScheme"
-import ContentBoxView from "./ContentBoxView"
-import { ThemedText } from "../ThemedText"
+import ContentBoxView from "../workoutBoxes/ContentBoxView"
+import { ThemedText } from "../../ThemedText"
 import { StyleSheet } from "react-native"
 import { workoutInputConstants } from "@/constants/UIConstants"
 
@@ -19,12 +19,14 @@ export default function WorkoutPicker({ style, label, ...rest }: Props) {
 
   return (
     <View style={styles.container}>
-      {label && (
-        <ThemedText type="subtitle">
-          {label}
-        </ThemedText>
-      )}
-      <ContentBoxView style={{ padding: 10, marginHorizontal: 0 }}>
+      {label && <ThemedText type="subtitle">{label}</ThemedText>}
+      <ContentBoxView
+        style={{
+          padding: 10,
+          marginHorizontal: 0,
+          borderWidth: workoutInputConstants.borderWidth,
+        }}
+      >
         <Picker
           dropdownIconColor={theme.text}
           style={[
@@ -46,4 +48,4 @@ const styles = StyleSheet.create({
     gap: workoutInputConstants.labelInputGap,
     marginHorizontal: workoutInputConstants.marginHorizontal,
   },
-});
+})

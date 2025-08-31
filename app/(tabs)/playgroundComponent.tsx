@@ -6,12 +6,11 @@ import { ThemedText } from "@/components/ThemedText"
 import { DUMMY_WORKOUT } from "@/constants/DummyWorkoutValues"
 import ExerciseComponent from "@/components/in-workout-gym-stuff/ExerciseComponent"
 import WorkoutComponent from "@/components/in-workout-gym-stuff/WorkoutComponent"
-import ContentBoxView from "@/components/ui/ContentBoxView"
-import ContentBoxLeftSeparatorRight from "@/components/ui/ContentBoxLeftSeparatorRight"
 import { useState } from "react"
 import { Ionicons } from "@expo/vector-icons"
 import { ExerciseCategory } from "@/constants/types/workout-types"
-import CreatingExercise from "@/components/create-workout-stuff/CreatingExercise"
+import CreatingExercise from "@/components/create-exercise-stuff/CreatingExercise"
+import AddedExerciseComponent from "@/components/create-workout-stuff/AddedExerciseComponent"
 // import { DUMMY_WORKOUT } from "@/constants/DummyWorkoutValues"
 
 const playground = () => {
@@ -59,7 +58,9 @@ const playground = () => {
           leftViewContent={leftViewContent}
           rightViewContent={rightViewContent}
         ></ContentBoxLeftSeparatorRight> */}
-        {/* <CreatingExercise position={0} /> */}
+        
+        {/* <AddedExerciseComponent exercise = {DUMMY_WORKOUT.exercises[0]}/> */}
+        <CreatingExercise position={0} />
       </SafeAreaView>
     </SafeAreaProvider>
   )

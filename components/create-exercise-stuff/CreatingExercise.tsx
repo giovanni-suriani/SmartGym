@@ -152,7 +152,8 @@ const CreatingExercise = ({ position = 0, workoutCreateExercise, ...otherProps }
             const createdExercise = await helperDb.getExercise(db, id); 
             if (createdExercise) {
               console.log(`Created Exercise:`, createdExercise);
-              workoutCreateExercise?.(createdExercise);                 
+              workoutCreateExercise?.(createdExercise);   
+              // helperDb.deleteAllUserExercisesCreatedExercises(db); // Clear all after creating one              
             } else {
               console.warn("Inserted exercise not found by id:", id);
             }

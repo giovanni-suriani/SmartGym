@@ -296,6 +296,20 @@ export async function getMaxExercisePositionOnUserCreatedExercises(
   return row?.maxPosition ?? null
 }
 
+type DBExerciseRow = {
+  id: number
+  workout_id: number
+  name: string
+  category: string
+  rest_sec: number | null
+  notes: string | null
+  progress_rate: number | null
+  weight_gap: number | null
+  position: number
+  load_unit: "kg" | "lb"
+}
+
+
 export type RowExercise = {
   id: number // AUTOINCREMENT
   workout_id: number // FK -> workouts.id
@@ -360,10 +374,41 @@ export async function getExercise(
 export async function getUserCreatedExercises(
   db: SQLiteDatabase
 ): Promise<Exercise[] | null> {
+
   const exercises = await db.getAllAsync<Exercise>(
-    `SELECT * FROM exercises WHERE workout_id = ? ORDER BY position ASC`,
+    `SELECT
+       id,
+       workout_id  AS workoutId,
+       name,
+       category,
+       rest_sec    AS restSec,
+       notes,
+       progress_rate AS progressRate,
+       weight_gap  AS weightGap,
+       position,
+       load_unit   AS loadUnit
+     FROM exercises
+     WHERE workout_id = ?
+     ORDER BY position ASC`,
     [dbDefinitions.WorkoutId_To_userCreatedExercise]
   )
+  
+  /* Casting  exercises fetchedExercises to exercises */
+  // const exercises: Exercise[] = fetchedExercises.map((ex) => ({
+  //   id: ex.id,
+  //   workoutId: ex.workout_id,
+  //   name: ex.name,
+  //   category: ex.category,
+  //   restSec: ex.rest_sec,
+  //   notes: ex.notes,
+  //   progressRate: ex.progress_rate,
+  //   weightGap: ex.weight_gap,
+  //   position: ex.position,
+  //   loadUnit: ex.load_unit,
+  // }))
+
+
+
   return exercises || null
 }
 

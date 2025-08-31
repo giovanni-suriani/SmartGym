@@ -23,7 +23,7 @@ import { Workout, Exercise, WorkoutSet } from '@/constants/types/workout-types';
 
 */
 
-const AddedExerciseComponent = () => {
+const ViewUserExercises = () => {
   const colorScheme = useColorScheme()
   const theme = Colors[colorScheme ?? "light"] // Fallback to light if undefined
   const db = useSQLiteContext()
@@ -44,17 +44,18 @@ const AddedExerciseComponent = () => {
 
 
   // Now it's a 2D array: [ [cell1, cell2, ...] ]
-  const headerNode: ReactNode[][] = [header.map((title) => <ThemedText type="default">{title}</ThemedText>)]
-  // const headerNode: ReactNode[] = header.map((title) => <ThemedText type="default">{title}</ThemedText>)
+  // const headerNode: ReactNode[][] = [header.map((title) => <ThemedText type="default">{title}</ThemedText>)]
+  const headerNode: ReactNode[] = header.map((title) => <ThemedText type="default">{title}</ThemedText>)
   
   const nameColumn = exercises.map((ex) => <ThemedText key={ex.name}  type="default">{ex.name}</ThemedText>)
-  const restColumn = exercises.map((ex) => <ThemedText key={ex.restSec} type="default">{ex.restSec ?? '-'}</ThemedText>)
-  const progressionColumn = exercises.map((ex) => <ThemedText key={ex.progressRate} type="default">{ex.progressRate ?? '-'}</ThemedText>)
+  const restColumn = exercises.map((ex) => <ThemedText key={ex.restSec} style={{textAlign:"center"}} type="default">{ex.restSec ?? '-'}</ThemedText>)
+  const progressionColumn = exercises.map((ex) => <ThemedText key={ex.progressRate} style={{textAlign:"center"}} type="default">{ex.progressRate ?? '-'}</ThemedText>)
   const rows = Array.from({ length: exercises.length }, (_, i) => i).map(i => [nameColumn[i], restColumn[i], progressionColumn[i]])
+  // console.log(`rows:`, rows);
 
   const tableContent: ReactNode[][] = [
     headerNode,
-    rows
+    ...rows
   ]
   // headerNode.push(...tableContent)
 
@@ -64,7 +65,7 @@ const AddedExerciseComponent = () => {
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
         {/* <ContentBoxLeftSeparatorRight textH={0}></ContentBoxLeftSeparatorRight> */}
-        <ContentBoxTable content={headerNode}></ContentBoxTable>
+        <ContentBoxTable content={tableContent}></ContentBoxTable>
       </SafeAreaView>
     </SafeAreaProvider>
   )
@@ -75,4 +76,4 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 })
-export default AddedExerciseComponent
+export default ViewUserExercises

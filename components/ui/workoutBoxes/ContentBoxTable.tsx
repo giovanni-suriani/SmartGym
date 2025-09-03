@@ -5,123 +5,94 @@ import {
   StyleProp,
   ViewStyle,
   StyleSheet as RNStyleSheet,
+  DimensionValue,
 } from "react-native"
 import { useColorScheme } from "@/hooks/useColorScheme"
 import { Colors } from "@/constants/Colors"
 import ContentBoxView from "./ContentBoxView"
 import { ThemedText } from "@/components/ThemedText"
+import {
+  contentBoxTableConstants,
+  workoutInputConstants,
+} from "@/constants/UIConstants"
+import ContentBoxColumn from "./ContentBoxColumn"
+import { useState, ReactNode, FC } from "react"
 
-type Props = {
+type ContentBoxTableProps = {
   focused?: boolean
-  rows?: number
-  columns?: number
-  /** content[row][col] */
-  content?: React.ReactNode[][]
+  content?: ReactNode[][]
+  columns?: ReactNode
+  colWidthPct?: DimensionValue
+  children?: ReactNode
   style?: StyleProp<ViewStyle>
-  rowStyle?: StyleProp<ViewStyle>
+}
+
+type CompoundContentBoxTable = FC<ContentBoxTableProps> & {
+  Column: FC<BoxColumnProps>
 }
 
 const ContentBoxTable = ({
-  focused = false,
-  rows = 3,
-  columns = 3,
-  content,
+  children,
+  colWidthPct,
   style,
-  rowStyle,
-}: Props) => {
+}: ContentBoxTableProps) => {
   const colorScheme = useColorScheme()
-  const borderColor =
-    Colors[colorScheme ?? "light"]?.borderColorUnfocused ?? "lightgray"
+  const theme = Colors[colorScheme ?? "light"]
+  // Normalize children to an array
+  const childArray = React.Children.toArray(children)
 
-  const rowCount = content?.length ?? rows
-  const colCount = content?.[0]?.length ?? columns
-  const colWidthPct = 100 / colCount
+
+  // Filter only our Column elements (others are passed through unchanged below)
+  const columnChildren = childArray.filter(
+    (c) => React.isValidElement(c) && c.type === Column
+  ) as React.ReactElement<BoxColumnProps>[]
+
+  const colCount = columnChildren.length
+  const computedWidth: DimensionValue | undefined =
+    colWidthPct ?? (colCount > 0 ? `${100 / colCount}%` : undefined)
+
+  // If there are no Column children, just render whatever was passed
+  if (colCount === 0) {
+    return <View style={[styles.tableRow, style]}>{children}</View>
+  }
 
   return (
-    <View style={[styles.table, style]}>
-      {Array.from({ length: rowCount }).map((_, rIdx) => {
-        const row = content?.[rIdx]
-        return (
-          <ContentBoxView
-            key={rIdx}
-            focused={focused}
-            style={[
-              styles.rowBox,
-              rowStyle,
-              rIdx === rowCount-1 ? { borderBottomWidth: 1 } : {borderBottomWidth: 0}
-            ]}
-          >
-            {/* Row inner container so we can place absolute separators */}
-            <View style={styles.rowInner}>
-              {/* Columns */}
-              {Array.from({ length: colCount }).map((_, cIdx) => (
-                <View
-                  key={cIdx}
-                  style={[styles.cell, { width: `${colWidthPct}%` }]}
-                >
-                  {row?.[cIdx] ?? (
-                    <ThemedText>
-                      R{rIdx + 1}C{cIdx + 1}
-                    </ThemedText>
-                  )}
-                </View>
-              ))}
-
-              {/* Vertical separators at left: k * 100/columns% (k = 1..colCount-1) */}
-              {Array.from({ length: colCount - 1 }).map((_, k) => (
-                <View
-                  key={`sep-${k}`}
-                  style={[
-                    styles.separator,
-                    {
-                      left: `${(k + 1) * colWidthPct}%`,
-                      backgroundColor: borderColor,
-                      // center the hairline on the percentage
-                      transform: [{ translateX: -RNStyleSheet.hairlineWidth }],
-                    },
-                  ]}
-                />
-              ))}
-            </View>
-          </ContentBoxView>
-        )
-      })}
+    <View style={[styles.tableRow, style]}>
+      {columnChildren.map((col, idx) =>
+        React.cloneElement(col, {
+          key: idx,
+          colWidthPct: col.props.colWidthPct ?? computedWidth,
+          style: [
+            col.props.style,
+            {
+              width: col.props.colWidthPct ?? computedWidth,
+              borderRightWidth: idx === colCount - 1 ? 2 : 0,
+              // flexGrow: 1,
+            },
+          ],
+          // borderRightWidth: idx < colCount - 1 ? 1 : 0,
+        })
+      )}
     </View>
   )
 }
 
+import { BoxColumnProps } from "./ContentBoxColumn"
+
+const Column: React.FC<BoxColumnProps> = (props) => {
+  return <ContentBoxColumn {...props} />
+}
+
+const ContentBoxTableCompound = ContentBoxTable as CompoundContentBoxTable
+ContentBoxTableCompound.Column = Column
+
 const styles = StyleSheet.create({
-  table: {
-    // gap: -64,
-    // marginBottom: 8,
-    // paddingBottom: 8,
-  },
-  rowBox: {
-    padding: 0,
-    borderRadius: 0,
-    // borderBottomWidth: 1,
-    // let the content define height
-  },
-  rowInner: {
-    position: "relative",
+  tableRow: {
     flexDirection: "row",
-    alignItems: "center",
-    minHeight: 44,
-    // borderBottomWidth: 0,
-    // paddingVertical: 8,
-    // paddingHorizontal: 10,
-  },
-  cell: {
-    paddingHorizontal: 8,
-    justifyContent: "center",
-    // borderBottomWidth: 1,
-  },
-  separator: {
-    position: "absolute",
-    top: 0,
-    bottom: 0,
-    width: 2,
+    marginHorizontal: "10%",
+    // alignContent: "stretch",
+    // width: "100%",
   },
 })
 
-export default ContentBoxTable
+export default ContentBoxTableCompound

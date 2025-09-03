@@ -251,6 +251,8 @@ export async function initializeDatabase(db: SQLiteDatabase) {
   } catch (err) {
     console.error("Schema error:", err)
   }
+  // print db name
+  // console.log(`Database initialized: ${db.options.}`);
 
   await seedCommonWorkout(db)
   await seedUserExercisesWorkout(db)

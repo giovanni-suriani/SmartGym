@@ -11,6 +11,14 @@ type workoutInputType = ViewStyle & {
   labelInputGap: number
 }
 
+type contentBoxTableConstantsType = ViewStyle & {
+  marginTable: number,
+}
+
+export const contentBoxTableConstants: contentBoxTableConstantsType= {
+  marginTable: 0,
+}
+
 export const workoutInputConstants: workoutInputType = {
   borderRadius: 8,
   height: 50,
@@ -19,3 +27,4 @@ export const workoutInputConstants: workoutInputType = {
   labelInputGap: 10,
   marginHorizontal: "10%" as DimensionValue,
 };
+

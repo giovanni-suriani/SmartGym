@@ -17,6 +17,7 @@ const ContentBoxView = ({ style, focused = false, ...otherProps }: Props) => {
   const borderRadius = contentBoxViewConstants.borderRadius
   const padding = contentBoxViewConstants.padding
   const marginHorizontal = contentBoxViewConstants.marginHorizontal
+  // const marginHorizontal = 0
   const alignSelf = "stretch"
   // const marginHorizontal = marginToUseHorizontal
   // const borderColor = focused

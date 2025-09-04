@@ -64,7 +64,6 @@ const AddedExerciseComponent = ({ exercise, focused = false }: Props) => {
         />
       )
     } else {
-      // console.log(`to te lascando kk`);
       return (
         <Ionicons
           name={iconMap[exercise?.category ?? ExerciseCategory.OTHER]}

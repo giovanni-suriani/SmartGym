@@ -47,61 +47,54 @@ const ViewUserExercises = () => {
     async function fetchExercises() {
       const exercisesFetched =
         (await helperDB.getUserCreatedExercises(db)) ?? []
-      
+
       // nameCol logic
-      const nameCol = exercisesFetched.map((ex, idx) => {
-        if (idx === 0) {
-          return headerNode[0] // render header first
-        }
-        return (
-          <ThemedText key={ex.name} type="default">
+      // let nameCol: ReactNode = [headerNode[0]] // start with header
+      const nameCol = [
+        headerNode[0],
+        ...exercisesFetched.map((ex) => (
+          <ThemedText key={ex.name} type="default" style={{ textAlign: "center" }}>
             {ex.name}
           </ThemedText>
-        )
-      })
+        )),
+      ]
       setNameColumn(nameCol)
 
       // restCol logic
-      const restCol = exercisesFetched.map((ex, idx) => {
-        if (idx === 0) {
-          return headerNode[1] // render header first
-        }
-        return (
+      const restCol = [
+        headerNode[1],
+        ...exercisesFetched.map((ex) => (
           <ThemedText
-            key={ex.restSec}
+            key={`rest-${ex.name}`} // safer unique key
             style={{ textAlign: "center" }}
             type="default"
           >
             {ex.restSec ?? "-"}
           </ThemedText>
-        )
-      })
+        )),
+      ]
       setRestColumn(restCol)
 
       // progressionCol logic
-      const progCol = exercisesFetched.map((ex, idx) => {
-        if (idx === 0) {
-          return headerNode[2] // render header first
-        }
-        return (
+      const progCol = [
+        headerNode[2],
+        ...exercisesFetched.map((ex) => (
           <ThemedText
-            key={ex.progressRate}
-            style={{ textAlign: "center" }}
+            key={`prog-${ex.name}`}
+            style={{ textAlign: "center", justifyContent: "center", fontSize:16 }}
             type="default"
           >
             {ex.progressRate ?? "-"}
           </ThemedText>
-        )
-      })
+        )),
+      ]
       setProgressionColumn(progCol)
 
-
       setExercises(exercisesFetched)
-      console.log(
-        `Fetched ${exercisesFetched?.length ?? 0} exercisesFetched from DB`,
-        exercisesFetched[0]
-      )
-      
+      // console.log(
+      //   `Fetched ${exercisesFetched?.length ?? 0} exercisesFetsched from DB`,
+      //   exercisesFetched[0]
+      // )
     }
     fetchExercises()
   }, [db]) // when dependencies change, the effect runs again
@@ -116,7 +109,7 @@ const ViewUserExercises = () => {
     restColumn,
     progressionColumn,
   ]
-  console.log(`render`)
+  // console.log(`render`, progressionColumn.length)
   // headerNode.push(...tableContent)
 
   // Add more columns as needed
@@ -124,10 +117,11 @@ const ViewUserExercises = () => {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.container}>
+        {/* <ContentBoxTable colWidthPct={"30%"}> */}
         <ContentBoxTable colWidthPct={"30%"}>
           <ContentBoxTable.Column content={nameColumn} />
-          {/* <ContentBoxTable.Column content={restColumn} /> */}
-          {/* <ContentBoxTable.Column content={progressionColumn} /> */}
+          <ContentBoxTable.Column content={restColumn} />
+          <ContentBoxTable.Column content={progressionColumn} />
         </ContentBoxTable>
         {/* <ContentBoxColumn content={nameColumn}></ContentBoxColumn> */}
         {/* <ContentBoxColumn ></ContentBoxColumn> */}

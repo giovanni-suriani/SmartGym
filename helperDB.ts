@@ -242,9 +242,32 @@ export async function restartDatabase(db: SQLiteDatabase) {
   }
 }
 
+export async function seedUserExercises(db: SQLiteDatabase) {
+  await db.execAsync("BEGIN")
+  try {
+    await createUserExercise(db, {
+      name: "Push-up",
+      category: ExerciseCategory.BODYWEIGHT,
+      restSec: 60,
+      position: 1,
+    })
+    await createUserExercise(db, {
+      name: "Plank",
+      category: ExerciseCategory.BODYWEIGHT,
+      restSec: 45,
+      position: 2,
+    })
+  } catch (e) {
+    await db.execAsync("ROLLBACK")
+    console.error("Seeding user exercises workout failed:", e)
+    throw e
+  }
+}
+
 /* Call this from your app’s root, once, to initialize the DB */
 
 export async function initializeDatabase(db: SQLiteDatabase) {
+  
   try {
     await db.execAsync(SCHEMA_SQL)
     console.info("Schema created successfully.")
@@ -254,6 +277,7 @@ export async function initializeDatabase(db: SQLiteDatabase) {
   // print db name
   // console.log(`Database initialized: ${db.options.}`);
 
+  // await seedUserExercises(db)
   await seedCommonWorkout(db)
   await seedUserExercisesWorkout(db)
   // await deleteDatabase(db) // uncomment to reset DB during development
@@ -408,8 +432,6 @@ export async function getUserCreatedExercises(
   //   position: ex.position,
   //   loadUnit: ex.load_unit,
   // }))
-
-
 
   return exercises || null
 }
